@@ -8,7 +8,7 @@ pip -m venv venv
 venv\Scripts\Activate
 
 #install django under virtual environment
-pip -m pip install django
+pip install django
 
 #install django rest framework
 pip install djangorestframework
