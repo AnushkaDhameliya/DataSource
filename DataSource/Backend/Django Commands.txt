@@ -1,0 +1,32 @@
+#steps to create djanog project and to run it 
+
+#to create virtual environment
+pip -m venv venv
+
+#to activate virtual environment
+#always activate virtual environment before running django project
+venv\Scripts\Activate
+
+#install django under virtual environment
+pip -m pip install django
+
+#install django rest framework
+pip install djangorestframework
+
+#to create django project
+django-admin startproject DataSourceDjangoAPI
+
+#to install cors headers for api acc
+pip install django-cors-headers
+
+#to install pandas
+pip install pandas
+
+#to install openpyxl
+pip install openpyxl
+
+#to run django project
+python manage.py runserver
+
+#django local host url
+http://127.0.0.1:8000
