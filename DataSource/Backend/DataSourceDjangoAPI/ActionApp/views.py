@@ -99,6 +99,8 @@ def actionApi(request):
             f, ax = plt.subplots(figsize =(15, 15))
             sb.heatmap(pearsoncorr, ax = ax, cmap ="YlGnBu", linewidths = 0.1)
 
+            #sb.pairplot(dataFile)
+
             plt.savefig(outputFileName)
 
             message = "Graph plotted"
@@ -108,8 +110,8 @@ def actionApi(request):
             jsonData = data["jsonData"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
-            x_columns = data["x_columns"]
-            y_columns = data["y_columns"]
+            x_columns =  ["age", "workclass", "fnlwgt", "education", "education-num", "marital-status", "occupation", "relationship", "race", "sex","Index" ]
+            y_columns = ["salary"]
             x_data =  pd.DataFrame(dataFile,columns=x_columns)
 
             y_data =  pd.DataFrame(dataFile,columns=y_columns)
@@ -126,8 +128,8 @@ def actionApi(request):
             y_pred = classifer.predict(X_test)
 
             accuracy=accuracy_score(y_test_data,y_pred)
-            f1_score=f1_score(y_test_data,y_pred,average=None)
-            message = "Accuracy:" + str(format((accuracy*100),".4f"),"%")
+            format_float = "{:.2f}".format(accuracy*100)
+            message = str(format_float) + "%"
 
     return JsonResponse(message,safe=False)
 
