@@ -27,14 +27,6 @@ def actionApi(request):
         data = JSONParser().parse(request)
 
         actionName = data["ActionName"]
-        
-        
-        
-        #outputFileName = data["outputFileName"]
-
-        jsonData = data["jsonData"]
-        
-        #outputFilePath = 'C:/Users/anush/Desktop/Virtual Desktop/Data Analytics Files/'+outputFileName+'.xlsx'
 
         #merge action
         if actionName == "Merge":
@@ -59,6 +51,7 @@ def actionApi(request):
         
         #sort action
         if actionName == "Sort":
+            jsonData = data["jsonData"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
             sortColumnNames = data["sortColumnNames"]
@@ -69,6 +62,7 @@ def actionApi(request):
 
         #projection action
         if actionName == "Projection":
+            jsonData = data["jsonData"]
             projectColumns = data["projectColumns"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
@@ -79,6 +73,7 @@ def actionApi(request):
 
         #encode action
         if actionName == "Encode":
+            jsonData = data["jsonData"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
             encodingColumns = data["encodingColumns"]
@@ -92,9 +87,11 @@ def actionApi(request):
         
         #coorelation action
         if actionName == "Correlation":
+            jsonData = data["jsonData"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
-            
+                    
+            outputFileName = data["outputFileName"]
             pearsoncorr = dataFile.corr(method='pearson')
             
             plt.figure()
@@ -102,12 +99,13 @@ def actionApi(request):
             f, ax = plt.subplots(figsize =(15, 15))
             sb.heatmap(pearsoncorr, ax = ax, cmap ="YlGnBu", linewidths = 0.1)
 
-            plt.savefig('C:/Users/anush/Desktop/Virtual Desktop/Data Analytics Files/output.png')
+            plt.savefig(outputFileName)
 
             message = "Graph plotted"
 
         #analysis
         if actionName == "Decision Tree":
+            jsonData = data["jsonData"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
             x_columns = data["x_columns"]
