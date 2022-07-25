@@ -1,0 +1,140 @@
+<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'spreadsheet' || variable.popupSubTitle === 'database' || variable.popupSubTitle === 'text'" (click)="dataSource.backToList()"><- Back</span>
+<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'merge'" (click)="dataSource.backToAction()"><- Back</span>
+<!-- First Time setting headers -->
+<table class="w100" *ngIf="!variable.selectedData.header.length">
+  <tr>
+    <td colspan="2"><p>Please answer below answers for smooth experience</p></td>
+  </tr>
+  <tr>
+    <td><label>Do you want to use 1st line as header?</label></td>
+    <td>
+      <select [(ngModel)]="variable.headersQuestion.q1" class="my1 w100">
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </td>
+  </tr>
+  <!-- Separating Headers -->
+  <tr *ngIf="variable.headersQuestion.q1 === 'Yes'">
+    <td><label>How do you want to separate headers?</label></td>
+    <td>
+      <select [(ngModel)]="variable.headersQuestion.q2" class="my1 w100">
+        <option value="columnSeparate">Column Seperated by Characters</option>
+        <option value="characterRange">Character Range for Columns</option>
+      </select>
+    </td>
+  </tr>
+  <tr *ngIf="variable.headersQuestion.q1 === 'Yes' && variable.headersQuestion.q2 === 'columnSeparate'">
+    <td><label>Select column separator</label></td>
+    <td>
+      <select [(ngModel)]="variable.selectedData.choiceOfSeparator" class="my1 w100">
+        <ng-container *ngFor="let separator of variable.separatorList">
+          <option value="{{separator}}">{{separator === ' ' ? 'Space' : separator}}</option>
+        </ng-container>
+        <option value="other">OTHER</option>
+      </select>
+      <input *ngIf="variable.selectedData.choiceOfSeparator === 'other'" type="text" [(ngModel)]="variable.selectedData.choiceOfSeparatorOther" class="my1" />
+    </td>
+  </tr>
+  <tr *ngIf="variable.headersQuestion.q1 === 'Yes' && variable.headersQuestion.q2 === 'columnSeparate'">
+    <td colspan="2">
+      <button class="mt1" (click)="dataSource.saveHeadersWithColumnSeparate(); crud.updateHeader()">Save</button>
+    </td>
+  </tr>
+  <tr *ngIf="variable.headersQuestion.q1 === 'Yes' && variable.headersQuestion.q2 === 'characterRange'">
+    <td colspan="2">
+      <strong>Data: [FIRST LINE]</strong>
+      <div>{{dataSource.getFirstTextLine(variable.selectedData.data)}}</div>
+      <button (click)="variable.columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Row</button>
+      <table class="w100">
+        <tr>
+          <th>Column Header</th>
+          <th>Character Range</th>
+          <th>Action</th>
+        </tr>
+        <tr *ngFor="let column of variable.columnSeparatorArray; let i = index">
+          <td>
+            <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.columnHeader" placeholder="Column Header" />
+          </td>
+          <td>
+            <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.charRange" placeholder="1,5" />
+          </td>
+          <td>
+            <button (click)="variable.columnSeparatorArray.splice(i, 1)">Delete</button>
+          </td>
+        </tr>
+      </table>
+      <button class="mt1" (click)="variable.selectedData.header = variable.columnSeparatorArray; crud.updateHeader()">Save</button>
+    </td>
+  </tr>
+  <tr *ngIf="variable.headersQuestion.q1 === 'No'">
+    <td colspan="2">
+      <strong>Data: [FIRST LINE]</strong>
+      <div>{{dataSource.getFirstTextLine(variable.selectedData.data)}}</div>
+      <button (click)="variable.columnSeparatorArray.push({columnHeader: ''})">Add Row</button>
+      <table>
+        <tr>
+          <th>Column Header</th>
+          <th>Action</th>
+        </tr>
+        <tr *ngFor="let column of variable.columnSeparatorArray; let i = index">
+          <td>
+            <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.columnHeader" placeholder="Column Header" />
+          </td>
+          <td>
+            <button (click)="variable.columnSeparatorArray.splice(i, 1)">Delete</button>
+          </td>
+        </tr>
+      </table>
+      <button class="mt1" (click)="variable.selectedData.header = variable.columnSeparatorArray; crud.updateHeader()">Save</button>
+    </td>
+  </tr>
+</table>
+<!-- If you have set Headers -->
+<ng-container *ngIf="variable.selectedData.header.length">
+  <br/>
+  <button *ngIf="!changeHeaders" class="mt1" (click)="handleChangeHeader()">Change Headers</button>
+  <table class="w100">
+    <tr *ngFor="let head of variable.selectedData.header; let i = index">
+      <td>{{head.columnHeader}}</td>
+      <td *ngIf="changeHeaders">
+        <input type="text" class="w100" [(ngModel)]="changeHeadersValue[i]['columnHeader']" />
+      </td>
+    </tr>
+  </table>
+  <button *ngIf="changeHeaders" class="mt1" (click)="variable.selectedData.header = changeHeadersValue; crud.updateHeader(); changeHeaders = !changeHeaders;">Update Headers</button>
+  <!-- You have set headers but need to format content -->
+  <div *ngIf="dataSource.isString(variable.selectedData.data)" class="mt1">
+    <h2>Choose below option to separate Data</h2>
+    <button class="mr1" (click)="actionEvent = 'speicalChar'">Special Character Separator</button>
+    <button (click)="actionEvent = 'charRange'">Separate Character Range</button>
+    <div *ngIf="actionEvent === 'charRange'">
+      <button class="mt1" (click)="variable.columnSeparatorArray.push({columnHeader: ''})">Add Row</button>
+      <table>
+        <tr>
+          <th>Column Header</th>
+          <th>Action</th>
+        </tr>
+        <tr *ngFor="let column of variable.columnSeparatorArray; let i = index">
+          <td>
+            <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.columnHeader" placeholder="0,3" />
+          </td>
+          <td>
+            <button (click)="variable.columnSeparatorArray.splice(i, 1)">Delete</button>
+          </td>
+        </tr>
+      </table>
+      <button class="mt1" (click)="crud.updateContent(actionEvent)">Save</button>
+    </div>
+    <div *ngIf="actionEvent === 'speicalChar'">
+      <select [(ngModel)]="variable.selectedData.choiceOfSeparator" class="my1 w100">
+        <ng-container *ngFor="let separator of variable.separatorList">
+          <option value="{{separator}}">{{separator === ' ' ? 'Space' : separator}}</option>
+        </ng-container>
+        <option value="other">OTHER</option>
+      </select>
+      <input *ngIf="variable.selectedData.choiceOfSeparator === 'other'" type="text" [(ngModel)]="variable.selectedData.choiceOfSeparatorOther" class="my1" />
+      <button class="mt1" (click)="crud.updateContent(actionEvent, variable.selectedData.choiceOfSeparator === 'other' ? variable.selectedData.choiceOfSeparatorOther : variable.selectedData.choiceOfSeparator)">Save</button>
+    </div>
+  </div>
+</ng-container>

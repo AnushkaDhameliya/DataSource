@@ -1,0 +1,31 @@
+<!--pre>{{variable.uploadedDataList | json}}</pre-->
+<ng-container *ngIf="variable.popupSubTitle === 'merge' && variable.listOfDraggedFiles.data.length">
+  <table>
+    <tr>
+      <td>DATASET</td>
+      <td>COMMON FIELD</td>
+      <td>More Details</td>
+    </tr>
+    <ng-container *ngFor="let data of variable.listOfDraggedFiles.data; let i = index">
+      <tr>
+        <td>{{data.fileDetail.filename}}</td>
+        <td>
+          <select [(ngModel)]="variable.actionCommonColumns[i]" style="padding: 5px 10px; margin-left: 10px; min-width: 200px;">
+            <ng-container *ngFor="let head of data.header">
+              <option [value]="head.columnHeader">{{head.columnHeader}}</option>
+            </ng-container>
+          </select>
+        </td>
+        <td>
+          <span class="pointer" (click)="dataSource.showInfo(data)">Information</span> | 
+          <span class="pointer" (click)="dataSource.showHead(data)">Header</span> | 
+          <span class="pointer" (click)="dataSource.showData(data)">Data</span>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+  <button (click)="dataSource.saveAction()" class="mt1">Save</button>
+</ng-container>
+<ng-container *ngIf="variable.popupSubTitle === 'merge' && !variable.listOfDraggedFiles.data.length">
+  <h2>No file is selected.</h2>
+</ng-container>

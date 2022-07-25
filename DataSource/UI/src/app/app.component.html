@@ -1,251 +1,40 @@
-<!-- <div>
-  <button class="btn-clear" (click)="showOutput()"><i class="fas fa-play"></i> Run</button>
-</div> -->
 <div class="wrapper">
 	<div class="col">
-		<div class="drag-drawflow">INPUT</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="spreadsheet">
-			<i class="fas fa-file-excel"></i><span> SpreadSheet</span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="database">
-			<i class="fas fa-server"></i><span> Database</span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="text">
-			<i class="fas fa-file-alt"></i><span> Text File</span>
-		</div>
-		<div class="drag-drawflow">-----------------------------------------------------------</div>
-    <div class="drag-drawflow"><span> ACTION</span></div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="merge">
-			<i class="fas fa-network-wired"></i><span> MERGE</span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="sort">
-			<i class="fas fa-sort"></i><span> Sort</span>
-		</div>
-		<div class="drag-drawflow">-----------------------------------------------------------</div>
-    <div class="drag-drawflow"><span> OUTPUT</span></div>
-		<div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="spreadsheetOutput">
-			<i class="fas fa-file-excel"></i><span> SpreadSheet</span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="databaseOutput">
-			<i class="fas fa-server"></i><span> Database</span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="textOutput">
-			<i class="fas fa-file-alt"></i><span> Text File</span>
-		</div>
-    <div class="drag-drawflow">-----------------------------------------------------------</div>
-    <div class="drag-drawflow"><span> TRANSFORMATION</span></div>
-		<div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="uppercase">
-			<span>Uppercase <strong>[TEXT]</strong></span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="lowercase">
-			<span>Lowercase <strong>[text]</strong></span>
-		</div>
-    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="capitalize">
-			<span>Capitalize <strong>[Text]</strong></span>
-		</div>
+    <app-sidemenu></app-sidemenu>
 	</div>
 	<div class="col-right">
-		<div id="drawflow" (drop)="drop($event)" (dragover)="allowDrop($event)">
-			<div class="btn-clear" (click)="editor.clearModuleSelected()">Clear</div>
-			<!--div class="bar-zoom">
-				<i class="fas fa-search-minus" (click)="editor.zoom_out()"></i>
-				<i class="fas fa-search" (click)="editor.zoom_reset()"></i>
-				<i class="fas fa-search-plus" (click)="editor.zoom_in()"></i>
-			</div-->
+		<div class="menu">
+			<ul class="floatLeft">
+				<li class="selected"><h1 class="m1">DATA SOURCE</h1></li>
+			</ul>
+      <button class="floatRight m1" (click)="crud.getData('/getData')">Refresh</button>
+      <button class="floatRight m1" (click)="variable.editor.clearModuleSelected()">Clear</button>
+      <button class="floatRight m1" [disabled]="!variable.listOfDraggedFiles.data.length || !variable.listOfDraggedFiles.action" (click)="dataSourceService.openPopup('OUTPUT', 'output')"><i class="fas fa-play"></i> Run</button>
 		</div>
-    <div>
-      <button class="btn-clear" (click)="showOutput()"><i class="fas fa-play"></i> Run</button>
-    </div>
+		<div id="drawflow" (drop)="dragDropService.drop($event)" (dragover)="dragDropService.allowDrop($event)">
+			<div class="bar-zoom">
+				<i class="fas fa-search-minus" (click)="variable.editorzoom_out()"></i>
+				<i class="fas fa-search" (click)="variable.editorzoom_reset()"></i>
+				<i class="fas fa-search-plus" (click)="variable.editorzoom_in()"></i>
+			</div>
+		</div>
 	</div>
-  <div class="popupWrapper" *ngIf="popupFlag">
-    <div class="popupContainer">
-      <div *ngIf="showTableView === 'list'">
-        <span class="closeIcon" (click)="popupFlag = false"></span>
-        <h3>Select {{title}}</h3>
-        <input id="my-file-selector" type="file" (change)="uploadData($event)" name="uploadExcel" /><br/><br/>
-        <h3>Select {{title}} from URL</h3>
-        <input style="width: 100%; padding: 5px 10px;" id="my-file-selector" type="text" name="uploadExcelURL" /><br/>
-        <button>Upload File</button><br/><br/>
-        <h3>Uploaded {{title}}</h3>
-        <div style="margin-top: 20px; width: 45%; float: left; padding: 10px; background: #f8f8f8; margin-right: 5px; margin-left: 5px;" *ngFor="let resp of getSpecData(responseData)">
-          <div class="card summary flex justify-content-between" style="height: auto; position: relative;">
-            <span style="position: absolute; right: 10px; cursor: pointer;" (click)="deleteRecord(resp)"><i title="Delete" class="fas fa-trash"></i></span>
-            <div class="flex" style="flex-direction: column;">
-              <div class="title" title="{{resp?.fileDetail?.filename}}">{{resp?.fileDetail?.filename}}</div>
-              <span class="detail">Number of records: {{resp?.data.length}}</span>
-              <div class="flex align-items-center">
-                <button title="Information" (click)="showInformationDetailMode(resp); showTableView = 'information';" type="button" label="Information" class="btn-clear reset-button" style="margin: 10px 10px 0 0"><i title="Information" class="fas fa-info-circle"></i></button>
-                <button title="Heading" (click)="showHeaderDetailMode(resp); showTableView = 'header';" type="button" label="Headers" class="btn-clear reset-button" style="margin: 10px 10px 0 0"><i title="Heading" class="fas fa-heading"></i></button>
-                <button title="View Details" (click)="showViewDetailMode(resp); showTableView = 'detail';" type="button" label="View Details" class="btn-clear reset-button" style="margin: 10px 10px 0 0"><i title="View Details" class="fas fa-eye"></i></button>
-                <button (click)="selectFile(resp); showTableView = 'list';" type="button" label="Select File" class="btn-clear reset-button" style="margin: 10px 10px 0 0"><i title="Select" class="fas fa-check"></i></button>
-                <button type="button" title="Refresh" class="btn-clear reset-button" style="margin: 10px 10px 0 0">
-                  <svg style="height: 14px; fill: white;" title="Refresh" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="showTableView === 'detail'">
-        <span style="cursor: pointer; margin-right: 10px;" (click)="showTableView = 'list'"><i title="Delete" class="fas fa-arrow-left"></i></span> Details
-        <p *ngIf="selectedData.fileDetail.fileType === 'txt' || selectedData.fileDetail.fileType === 'sql'"><br/>{{selectedData.data}}</p>
-        <table cellpadding="0" cellspacing="0" *ngIf="selectedData.fileDetail.fileType === 'csv' || selectedData.fileDetail.fileType === 'xlsx'">
-          <thead>
-            <tr>
-              <th *ngFor="let header of selectedData.header">{{header}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of selectedData.data">
-              <td *ngFor="let header of selectedData.header">{{data[header]}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div *ngIf="showTableView === 'information'">
-        <span style="cursor: pointer; margin-right: 10px;" (click)="showTableView = 'list'"><i title="Delete" class="fas fa-arrow-left"></i></span>
-        Information
-        <div *ngIf="selectedData?.information">{{selectedData.information}}</div>
-        <div *ngIf="!selectedData?.information">
-          <textarea [(ngModel)]="information" style="width: 100%;height: 130px;margin-top: 20px;margin-bottom: 20px;"></textarea>
-          <button class="btn-clear reset-button" (click)="updateInformation()">Submit</button>
-        </div>
-      </div>
-      <div *ngIf="showTableView === 'header'">
-        <span style="cursor: pointer; margin-right: 10px;" (click)="showTableView = 'list'"><i title="Delete" class="fas fa-arrow-left"></i></span>
-        Headers
-        <button class="btn-clear reset-button" (click)="headerAction = 'showHeader'">Show Header</button>
-        <button class="btn-clear reset-button" (click)="headerAction = 'changeHeader'">Change Header</button>
-        <button class="btn-clear reset-button" (click)="headerAction = 'columnSeparator'">Column Separator</button>
-        <button class="btn-clear reset-button" (click)="headerAction = 'choiceOfSeparator'">Choice of Separator</button>
-        <ng-container *ngIf="headerAction == 'showHeader'">
-          <table cellpadding="0" cellspacing="0" width="100%">
-            <tr *ngFor="let header of selectedData.header; let i = index;">
-              <th>{{header}}</th>
-            </tr>
-          </table>
-        </ng-container>
-        <ng-container *ngIf="headerAction == 'changeHeader'">
-          <table cellpadding="0" cellspacing="0" width="100%">
-            <tr *ngFor="let header of selectedData.header; let i = index;">
-              <th>{{header}}</th>
-              <td><input type="text" [(ngModel)]="headers[i]" /></td>
-            </tr>
-          </table>
-        </ng-container>
-        <ng-container *ngIf="headerAction == 'columnSeparator'">
-          In Progress
-        </ng-container>
-        <ng-container *ngIf="headerAction == 'choiceOfSeparator'">
-          In Progress
-        </ng-container>
-        <button class="btn-clear reset-button" (click)="updateHeaders()">Submit</button>
-      </div>
-    </div>
-  </div>
-  <div class="popupWrapper" *ngIf="popupFlagExport">
-    <div class="popupContainer">
-      <span class="closeIcon" (click)="popupFlagExport = false"></span>
-      <h3>Output</h3>
-      <div style="width: 100%; overflow: auto;">
-        <table id="outputTable" style="color: #333;" cellpadding="0" cellspacing="0">
-          <tr>
-            <th *ngFor="let header of outputTableHeaders" style="padding: 10px; text-align: left; border: 1px solid #eee; background: #eee;">{{header | uppercase}}</th>
-          </tr>
-          <tr *ngFor="let data of outputTable;">
-            <td style="border: 1px solid #eee; padding: 10px; text-align: left;" *ngFor="let header of outputTableHeaders">{{data[header]}}</td>
-          </tr>
-        </table>
-        <button (click)="exportTable()" type="button" label="Download" class="btn-clear reset-button" style="float: right;">Download</button>
-      </div>
-    </div>
-  </div>
-  <div class="popupWrapper" *ngIf="popupFlagAction">
-    <div class="popupContainer">
-      <span class="closeIcon" (click)="popupFlagAction = false"></span>
-      <h3>Action: {{actionEvent}}</h3><br/>
-      <div *ngIf="showDetailData == false">
-        <strong style="display: block;">Please Select Option</strong><br/>
-        <ng-container *ngIf="actionEvent === 'Merge'">
-          <table cellpadding="0" cellspacing="0">
-            <tr>
-              <td>DATASET</td>
-              <td>COMMON FIELD</td>
-              <td>ACTION</td>
-            </tr>
-            <ng-container *ngFor="let data of selectedData; let i = index" style="margin-bottom: 10px;">
-              <tr>
-                <td>{{data.fileDetail.filename}}</td>
-                <td>
-                  <select [(ngModel)]="actionCommonColumns[i]" style="padding: 5px 10px; margin-left: 10px; min-width: 200px;">
-                    <ng-container *ngFor="let head of data.header">
-                      <option [value]="head">{{head}}</option>
-                    </ng-container>
-                  </select>
-                </td>
-                <td><span (click)="showDetailData = true; showDetailDataInfo = data">View</span></td>
-              </tr>
-            </ng-container>
-          </table>
-        </ng-container>
-        <ng-container *ngIf="actionEvent.includes('.csv') || actionEvent.includes('.xlsx')">
-          <table cellpadding="0" cellspacing="0" style="border-right: 1px solid #333;">
-            <thead>
-              <tr>
-                <th *ngFor="let header of actionEventData.header">{{header}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of actionEventData.data">
-                <td *ngFor="let header of actionEventData.header">{{data[header]}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </ng-container>
-      </div>
-      <div *ngIf="showDetailData == true">
-        <label (click)="showDetailData=false">Back</label>
-        <div style="width: 100%;">
-          <button class="btn-clear" style="position: relative; float: left;" (click)="showDetailDataAction = 'info'">File Info</button>
-          <button class="btn-clear" style="position: relative; float: left;" (click)="showDetailDataAction = 'header'">File Headers</button>
-          <button class="btn-clear" style="position: relative; float: left;" (click)="showDetailDataAction = 'data'">File Data</button>
-          <div style="clear: both; margin-bottom: 20px;"></div>
-        </div>
-        <div *ngIf="showDetailDataAction === 'info'" style="width: 100%;">
-          {{showDetailDataInfo.fileDetail.filename}} File Information
-          <table>
-            <tr>
-              <td>File Name</td>
-              <td>{{showDetailDataInfo.fileDetail.filename}}</td>
-            </tr>
-            <tr>
-              <td>File Type</td>
-              <td>{{showDetailDataInfo.fileDetail.fileType}}</td>
-            </tr>
-            <tr>
-              <td>File Information</td>
-              <td>{{showDetailDataInfo.information ? showDetailDataInfo.information : 'No Information Found'}}</td>
-            </tr>
-          </table>
-        </div>
-        <div *ngIf="showDetailDataAction === 'header'">
-          {{showDetailDataInfo.fileDetail.filename}} File Headers
-          <ul>
-            <li *ngFor="let head of showDetailDataInfo.header">{{head}}</li>
-          </ul>
-        </div>
-        <div *ngIf="showDetailDataAction === 'data'">
-          {{showDetailDataInfo.fileDetail.filename}} File Data
-          <table>
-            <tr>
-              <th *ngFor="let head of showDetailDataInfo.header">{{head}}</th>
-            </tr>
-            <tr *ngFor="let data of showDetailDataInfo.data">
-              <td *ngFor="let head of showDetailDataInfo.header">{{data[head]}}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
+</div>
+<div class="popupWrapper" *ngIf="variable.popupFlag">
+  <div class="popupContainer">
+    <table class="w100 noBorder m0">
+      <tr>
+        <td class="p0"><h2 class="m0">{{variable.popupTitle | uppercase}}</h2></td>
+        <td class="text-right p0"><span class="closeIcon" (click)="variable.popupFlag = false"></span></td>
+      </tr>
+    </table>
+    <app-input-popup *ngIf="variable.popupAction === 'input'"></app-input-popup>
+    <app-action-popup *ngIf="variable.popupAction === 'action'"></app-action-popup>
+    <app-analysis-popup *ngIf="variable.popupAction === 'analysis'"></app-analysis-popup>
+    <app-transformation-popup *ngIf="variable.popupAction === 'transformation'"></app-transformation-popup>
+    <app-output-popup *ngIf="variable.popupAction === 'output'"></app-output-popup>
+    <app-file-data *ngIf="variable.popupAction === 'file-data'"></app-file-data>
+    <app-file-info *ngIf="variable.popupAction === 'file-info'"></app-file-info>
+    <app-file-head *ngIf="variable.popupAction === 'file-head'"></app-file-head>
   </div>
 </div>

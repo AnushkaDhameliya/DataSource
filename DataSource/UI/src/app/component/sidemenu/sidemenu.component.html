@@ -1,0 +1,57 @@
+<fieldset class="mb1">
+  <legend>INPUT</legend>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="spreadsheet">
+    <i class="fas fa-file-excel"></i><span> SpreadSheet</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="database">
+    <i class="fas fa-server"></i><span> Database</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="text">
+    <i class="fas fa-file-alt"></i><span> Text File</span>
+  </div>
+</fieldset>
+<fieldset class="mb1">
+  <legend>ACTION</legend>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="merge">
+    <i class="fas fa-network-wired"></i><span> Merge</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="sort">
+    <i class="fas fa-sort"></i><span> Sort</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="projection">
+    <i class="fas fa-sort"></i><span> Projection</span>
+  </div>
+</fieldset>
+<fieldset class="mb1">
+  <legend>ANALYSIS</legend>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="decision_tree">
+    <i class="fas fa-network-wired"></i><span> Decision Tree</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="regression">
+    <i class="fas fa-sort"></i><span> Regression</span>
+  </div>
+</fieldset>
+<fieldset class="mb1">
+  <legend>TRANSFORMATION</legend>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="uppercase">
+    <span>Uppercase <strong>[TEXT]</strong></span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="lowercase">
+    <span>Lowercase <strong>[text]</strong></span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="encode">
+    <span>Encode <strong>[Text]</strong></span>
+  </div>
+</fieldset>
+<fieldset class="mb1">
+  <legend>OUTPUT</legend>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="spreadsheetOutput">
+    <i class="fas fa-file-excel"></i><span> SpreadSheet</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="databaseOutput">
+    <i class="fas fa-server"></i><span> Database</span>
+  </div>
+  <div class="drag-drawflow" draggable="true" (dragstart)="dragDropService.drag($event)" data-node="textOutput">
+    <i class="fas fa-file-alt"></i><span> Text File</span>
+  </div>
+</fieldset>

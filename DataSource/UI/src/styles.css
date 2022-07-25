@@ -3,6 +3,18 @@
   --color: #eee;
   --background-color: #333;
   --background-box-title: #444;
+  --primary: #F7882F;
+  --white: #FFFFFF;
+}
+
+* {
+  font-family: 'Poppins', sans-serif !important;
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+
+h1 {
+  font-size: 2em;
 }
 
 html,
@@ -65,16 +77,13 @@ header a {
 }
 
 .drag-drawflow {
-  line-height: 50px;
+  line-height: 30px;
   /* border-bottom: 1px solid var(--border-color); */
-  padding-left: 20px;
   cursor: move;
   user-select: none;
 }
 
 .menu {
-  position: absolute;
-  height: 40px;
   display: block;
   background: var(--color);
   width: 100%;
@@ -100,21 +109,33 @@ header a {
   font-weight: bold;
 }
 
+button,
 .btn-clear {
-  float: right;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: var(--color);
+  min-width: 100px;
+  text-align: center;
+  position: relative;
+  color: var(--primary);
   font-weight: bold;
-  border: 1px solid #0e5ba3;
-  background: var(--border-color);
+  border: 1px solid var(--primary);
+  background: var(--white);
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
   z-index: 5;
 }
-
+.btn-clear {
+  position: absolute;
+  top: 10px;
+  right: 10px;  
+  float: right;
+}
+button svg,
+.btn-clear svg {
+  margin-right: 5px;
+}
+.uploadedFileDetails button {
+  min-width: auto;
+}
 .btn-lock {
   float: right;
   position: absolute;
@@ -130,7 +151,16 @@ header a {
   z-index: 5;
   cursor: pointer;
 }
-
+button.active,
+.btn-clear.active {
+  color: var(--white);
+  background: var(--primary);
+}
+button:disabled,
+.btn-clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .bar-zoom {
   float: right;
   position: absolute;
@@ -159,7 +189,6 @@ header a {
   position: relative;
   width: calc(100vw - 301px);
   height: calc(100% - 50px);
-  top: 40px;
   background: var(--background-color);
 }
 
@@ -528,6 +557,8 @@ header a {
   height: 100%;
   background: rgba(0,0,0,0.6);
   z-index: 10;
+  top: 0;
+  left: 0;
 }
 .popupWrapper .popupContainer {
   width: 70%;
@@ -551,26 +582,25 @@ header a {
   right: 10px;
   top: 10px;
   height: 2px;
-  width: 20px;
+  width: 15px;
   background: #444;
 }
 
 .popupWrapper .closeIcon {
-  position: absolute;
-  right: 10px;
-  width: 40px;
-  height: 40px;
+  width: 25px;
+  height: 25px;
   cursor: pointer;
-  top: 10px;
   border-radius: 10px;
   border: 1px solid #ddd;
+  position: relative;
+  display: inline-block;
 }
 
 .popupWrapper .closeIcon:before,
 .popupWrapper .closeIcon:after {
   content: ' ';
-  right: 10px;
-  top: 20px;
+  right: 5px;
+  top: 12px;
   transform: rotate(45deg);
 }
 
@@ -593,8 +623,8 @@ table thead {
 }
 table th,
 table thead th {
-  background: #333;
-  color: #fff;
+  background: #ccc;
+  color: #333;
   padding: 10px;
   font-size: 12px;
   white-space: nowrap;
@@ -610,14 +640,14 @@ table tbody td {
   color: #333;
   padding: 10px;
   text-align: left;
-  border: 1px solid #333;
+  border: 1px solid #ccc;
   border-right: 0;
 }
 table tbody td:last-child {
   border-right: 1px;
 }
 table td {
-  border: 1px solid #333;
+  border: 1px solid #ccc;
 }
 textarea {
   font-family: "Roboto", sans-serif;
@@ -632,7 +662,6 @@ textarea {
   position: relative;
   width: calc(100vw - 301px);
   height: calc(100% - 50px);
-  top: 40px;
   background: var(--background-color);
   background-size: 25px 25px;
   background-image: linear-gradient(to right, #f1f1f1 1px, transparent 1px), linear-gradient(to bottom, #f1f1f1 1px, transparent 1px);
@@ -649,4 +678,200 @@ textarea {
 .drawflow-node .title-box {
   padding: 15px;
   line-height: 16px;
+}
+input {
+  width: 100%;
+  padding: 5px;
+}
+.successAlert {
+  border: 1px solid #718768;
+  padding: 10px;
+  margin: 0;
+  background: #ABD699;
+  color: #718768;
+}
+.mt0 {
+  margin-top: 0 !important;
+}
+.mt1 {
+  margin-top: 10px !important;
+}
+.mt2 {
+  margin-top: 20px !important;
+}
+.mb0 {
+  margin-bottom: 0 !important;
+}
+.mb1 {
+  margin-bottom: 10px !important;
+}
+.mb2 {
+  margin-bottom: 20px !important;
+}
+.mx1 {
+  margin: 0 10px;
+}
+.mx2 {
+  margin: 0 20px;
+}
+.mr1 {
+  margin-right: 10px;
+}
+.mr2 {
+  margin-right: 20px;
+}
+.ml1 {
+  margin-left: 10px;
+}
+.ml2 {
+  margin-left: 20px;
+}
+.my1 {
+  margin: 10px 0;
+}
+.my2 {
+  margin: 20px 0;
+}
+.m0 {
+  margin: 0;
+}
+.m1 {
+  margin: 10px;
+}
+.m2 {
+  margin: 20px;
+}
+.p0 {
+  padding: 0;
+}
+.p1 {
+  padding: 10px;
+}
+.p2 {
+  padding: 20px;
+}
+.pt0 {
+  padding-top: 0 !important;
+}
+.pt1 {
+  padding-top: 10px !important;
+}
+.pt2 {
+  padding-top: 20px !important;
+}
+.pb0 {
+  padding-bottom: 0 !important;
+}
+.pb1 {
+  padding-bottom: 10px !important;
+}
+.pb2 {
+  padding-bottom: 20px !important;
+}
+.px1 {
+  padding: 0 10px;
+}
+.px2 {
+  padding: 0 20px;
+}
+.py1 {
+  padding: 10px 0;
+}
+.py2 {
+  padding: 20px 0;
+}
+.floatLeft {
+  float: left;
+}
+.floatRight {
+  float: right;
+}
+.clearFloat {
+  clear: both;
+}
+.fileUploadContainer {
+  position: relative;
+  border: 1px solid #ccc;
+}
+.fileUploadContainer input {
+  border: 1px solid #000;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 6;
+  position: relative;
+}
+.fileUploadContainer svg {
+  transform: scale(0.5);
+  float: left;
+  fill: #333;
+}
+.customFileUpload span {
+  line-height: 50px;
+  text-transform: capitalize;
+  font-weight: bold;
+  letter-spacing: 2px;  
+}
+.customFileUpload {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  z-index: 1;
+  cursor: pointer;
+}
+.w100 {
+  width: 100%;
+}
+table {
+  border-collapse: collapse;
+}
+table.noBorder td {
+  border: 0;
+}
+.border-strip {
+  border: 1px dashed #ccc !important;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+select {
+  padding: 5px;
+}
+h2 {
+  font-size: 22px;
+}
+.uploaded-file-list {
+  width: 45%;
+  float: left;
+  padding: 10px;
+  background: #f8f8f8;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
+select {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+}
+.size-half-X {
+  transform: scale(0.5);
+}
+.popupWrapper .popupContainer .title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 90%;
+  overflow: hidden;
+}
+textarea {
+  border: 1px solid #ccc;
+  height: 150px;
+  resize: none;
+}
+.cursorPointer {
+  cursor: pointer;
 }

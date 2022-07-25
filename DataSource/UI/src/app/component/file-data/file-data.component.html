@@ -1,0 +1,18 @@
+<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'spreadsheet' || variable.popupSubTitle === 'database' || variable.popupSubTitle === 'text'" (click)="dataSource.backToList()"><- Back</span>
+<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'merge'" (click)="dataSource.backToAction()"><- Back</span>
+<div *ngIf="!variable.selectedData.header.length || dataSource.isString(variable.selectedData.data)">
+  {{variable.selectedData.data}}
+</div>
+<table *ngIf="variable.selectedData.header.length && !dataSource.isString(variable.selectedData.data)">
+  <ng-container *ngIf="variable.selectedData.data.length">
+    <tr>
+      <th *ngFor="let head of variable.selectedData.header">{{head.columnHeader}}</th>
+    </tr>
+    <tr *ngFor="let data of variable.selectedData.data">
+      <td *ngFor="let head of variable.selectedData.header; let i = index">{{data[head.columnHeader] ? data[head.columnHeader] : data[i]}}</td>
+    </tr>
+  </ng-container>
+  <tr *ngIf="!variable.selectedData.data.length">
+    <td>No Data Found</td>
+  </tr>
+</table>

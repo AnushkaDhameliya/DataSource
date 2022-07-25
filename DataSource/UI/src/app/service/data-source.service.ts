@@ -1,0 +1,120 @@
+import { Injectable } from '@angular/core';
+import { VariableService } from './variable.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataSourceService {
+
+  constructor(private variable: VariableService) { }
+
+  public openPopup(title = 'Data Source', action='input') {
+    this.variable.popupFlag = true;
+    this.variable.outputTable = {
+      data: [],
+      header: []
+    };
+    if (this.variable.listOfDraggedFiles.action && this.variable.listOfDraggedFiles.action.includes('merge')) {
+      /*this.http.post('/action', {body: this.variable.listOfDraggedFiles.data}).subscribe((resp) => {
+        console.log('Success', resp);
+      });*/
+      let maxDataCount = 0;
+      this.variable.listOfDraggedFiles.data.map(data => {
+        maxDataCount = maxDataCount < data.data.length ? data.data.length : maxDataCount; 
+      })
+      console.log(maxDataCount);
+      for (let i = 0; i < maxDataCount; i++) {
+        let outputData = [];
+        this.variable.listOfDraggedFiles.data.map(selData => {
+          outputData = {
+            ...outputData,
+            ...selData.data[i]
+          };
+        });
+        this.variable.outputTable.data.push(outputData);
+      }
+      this.variable.outputTable.header = Object.keys(this.variable.outputTable.data[0]);
+    }
+    this.setPopupDetails(title, action);
+  }
+
+  public setPopupDetails(title = null, action = null) {
+    this.variable.popupTitle = title;
+    this.variable.popupAction = action;
+  }
+
+  public closePopup() {
+    this.variable.popupFlag = false;
+    this.setPopupDetails();
+  }
+
+  public showInfo(resp: any) {
+    this.variable.selectedData = resp;
+    this.variable.popupTitle = 'About ' + resp.fileDetail.filename;
+    this.variable.popupAction = 'file-info';
+  }
+
+  public showData(resp: any) {
+    this.variable.selectedData = resp;
+    this.variable.popupTitle = 'Data ' + resp.fileDetail.filename;
+    this.variable.popupAction = 'file-data';
+  }
+
+  public showHead(resp: any) {
+    this.variable.selectedData = resp;
+    this.variable.popupTitle = 'Headers of file ' + resp.fileDetail.filename;
+    this.variable.popupAction = 'file-head';
+  }
+
+  public backToList() {
+    this.variable.popupAction = 'input';
+    this.variable.popupTitle = 'CHOOSE FILE';
+  }
+
+  public backToAction() {
+    this.variable.popupAction = 'action';
+    this.variable.popupTitle = 'MERGE ACTION';
+  }
+
+  public selectFile(resp) {
+    this.variable.listOfDraggedFiles.data.push(resp);
+    document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = resp.fileDetail.filename;
+    this.variable.popupFlag = false;
+  }
+
+  public saveAction() {
+    this.variable.listOfDraggedFiles.actionCommonColumns = this.variable.actionCommonColumns;
+    this.variable.listOfDraggedFiles.action = 'merge';
+    this.variable.actionCommonColumns = [];
+    this.variable.popupFlag = false;
+    document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
+  }
+
+  public getActionSummary() {
+    let summary = '';
+    this.variable.listOfDraggedFiles.data.map((file, index) => {
+      summary = summary + ' ' + file.fileDetail.filename + ' [' + this.variable.listOfDraggedFiles.actionCommonColumns[index] + ']<br/>';
+    });
+    return summary;
+  }
+
+  public getFirstTextLine(data) {
+    try {
+      return data.split('\n')[0];
+    } catch(e) {
+      return '';
+    }
+  }
+
+  public isString(data) {
+    return typeof data === 'string';
+  }
+
+  public addNewLineWithBr(data) {
+    return data.replace('\n', '<br/>')
+  }
+
+  public saveHeadersWithColumnSeparate() {
+    this.variable.selectedData.header = this.getFirstTextLine(this.variable.selectedData.data).split(this.variable.selectedData.choiceOfSeparator === 'other' ? this.variable.selectedData.choiceOfSeparatorOther : this.variable.selectedData.choiceOfSeparator).map(option => {return{'columnHeader': option}});
+  }
+}

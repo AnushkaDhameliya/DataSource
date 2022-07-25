@@ -1,0 +1,54 @@
+<table class="w100 noBorder">
+  <tr>
+    <td class="border-strip" width="40%">
+      <strong>Upload File From Local Device</strong>
+      <div class="fileUploadContainer mt1 mb1">
+        <input id="my-file-selector" type="file" (change)="crud.uploadData($event)" name="uploadExcel" />
+        <div class="customFileUpload">
+          <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M22.6 37.9h3V27.85l4.1 4.1 2.1-2.1-7.8-7.6-7.7 7.7 2.1 2.1 4.2-4.2ZM11 44q-1.2 0-2.1-.9Q8 42.2 8 41V7q0-1.2.9-2.1Q9.8 4 11 4h18.05L40 14.95V41q0 1.2-.9 2.1-.9.9-2.1.9Zm16.55-27.7V7H11v34h26V16.3ZM11 7v9.3V7v34V7Z"/></svg>
+          <span>Upload File</span>
+        </div>
+      </div>
+    </td>
+    <td class="text-center">OR</td>
+    <td class="border-strip">
+      <strong>Upload File From URL</strong>
+      <div class="mt1 mb1">
+        <table class="w100">
+          <tr>
+            <td width="70%">
+              <input id="my-file-selector" type="text" name="uploadExcelURL" placeholder="http://www.domain_path/filename.extension" />
+            </td>
+            <td>
+              <button>Upload File</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>
+<hr class="mt2 mb2"/>
+<h2 class="text-center mb1 mt2">PREVIOUSLY UPLOADED {{variable.popupSubTitle | uppercase}} FILES</h2>
+<div class="border-strip uploaded-file-list" *ngFor="let resp of variable.uploadedDataList">
+  <div class="card summary flex justify-content-between" style="height: auto; position: relative;">
+    <span style="position: absolute; right: 10px; cursor: pointer;" (click)="crud.deleteRecord(resp)"><i title="Delete" class="fas fa-trash"></i></span>
+    <div class="flex" style="flex-direction: column;">
+      <div class="title" title="{{resp?.fileDetail?.filename}}">{{resp?.fileDetail?.filename}}</div>
+      <span class="detail">Number of records: {{resp?.data.length}}</span>
+      <div class="flex align-items-center uploadedFileDetails">
+        <button title="Information" (click)="dataSource.showInfo(resp)" type="button" label="Information" style="margin: 10px 10px 0 0"><i title="Information" class="fas fa-info-circle"></i></button>
+        <button title="Heading" (click)="dataSource.showHead(resp)" type="button" label="Headers" style="margin: 10px 10px 0 0"><i title="Heading" class="fas fa-heading"></i></button>
+        <button title="View Details" (click)="dataSource.showData(resp)" type="button" label="View Details" style="margin: 10px 10px 0 0"><i title="View Details" class="fas fa-eye"></i></button>
+        <button (click)="dataSource.selectFile(resp)" type="button" label="Select File" style="margin: 10px 10px 0 0"><i title="Select" class="fas fa-check"></i></button>
+        <button type="button" title="Refresh" style="margin: 10px 10px 0 0">
+          <svg style="height: 14px; fill: #F7882F;" title="Refresh" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="border-strip p2 text-center" *ngIf="!variable.uploadedDataList.length">
+  No Record Found
+</div>
+<div class="clearFloat"></div>
