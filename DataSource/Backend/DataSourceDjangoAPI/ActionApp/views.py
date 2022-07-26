@@ -125,7 +125,7 @@ def actionApi(request):
             jsonData = data["jsonData"]
             json_object = json.loads(jsonData)
             dataFile = pd.json_normalize(json_object)
-            x_columns =  ["age", "workclass", "fnlwgt", "education", "education-num", "marital-status", "occupation", "relationship", "race", "sex","Index" ]
+            x_columns =  ["age", "workclass", "fnlwgt", "education", "education-num", "marital-status", "occupation", "relationship", "race", "sex"]
             y_columns = ["salary"]
             x_data =  pd.DataFrame(dataFile,columns=x_columns)
 
