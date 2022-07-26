@@ -35,9 +35,10 @@ export class VariableService {
   /*Header Section*/
   public columnSeparatorArray = [{columnHeader: '', charRange: ''}];
   public headersQuestion = {
-    q1: 'No',
+    q1: 'Yes',
     q2: ''
   };
+  public accuracy = null;
   public separatorList = [' ',',',';',"'",'"','!','@','~','#','$'];
 
   constructor() {}

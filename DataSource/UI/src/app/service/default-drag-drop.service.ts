@@ -279,7 +279,7 @@ export class DefaultDragDropService {
       case "spreadsheetOutput":
         let spreadsheetOutput = `
         <div>
-          <div class="title-box"><i class="fas fa-file-excel"></i><span id="spreadsheetOutput" class="iconInfo">export.csv</span></div>
+          <div class="title-box"><i class="fas fa-file-excel"></i><span id="spreadsheetOutput" class="iconInfo">Result.csv</span></div>
         </div>
         `;
         this.variable.editor.addNode(
