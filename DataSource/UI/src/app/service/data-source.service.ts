@@ -12,14 +12,14 @@ export class DataSourceService {
 
   public openPopup(title = 'Data Source', action='input') {
     this.variable.popupFlag = true;
-    this.variable.outputTable = {
+    /*this.variable.outputTable = {
       data: [],
       header: []
     };
     if (this.variable.listOfDraggedFiles.action && this.variable.listOfDraggedFiles.action.includes('merge')) {
       /*this.http.post('/action', {body: this.variable.listOfDraggedFiles.data}).subscribe((resp) => {
         console.log('Success', resp);
-      });*/
+      });* /
       let maxDataCount = 0;
       this.variable.listOfDraggedFiles.data.map(data => {
         maxDataCount = maxDataCount < data.data.length ? data.data.length : maxDataCount; 
@@ -36,7 +36,7 @@ export class DataSourceService {
         this.variable.outputTable.data.push(outputData);
       }
       this.variable.outputTable.header = Object.keys(this.variable.outputTable.data[0]);
-    }
+    }*/
     this.setPopupDetails(title, action);
   }
 
@@ -84,7 +84,7 @@ export class DataSourceService {
     this.variable.popupFlag = false;
   }
 
-  public saveAction() {
+  public saveAction(funParam?: any) {
     this.variable.listOfDraggedFiles.actionCommonColumns = this.variable.actionCommonColumns;
     this.variable.listOfDraggedFiles.action = this.variable.popupSubTitle;
     if (this.variable.popupSubTitle === 'merge') {
@@ -102,30 +102,81 @@ export class DataSourceService {
       };
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
+        this.variable.outputTable.data = resp;
+        this.variable.outputTable.header = Object.keys(resp[0]);
       });
-      this.variable.actionCommonColumns = [];
-      this.variable.popupFlag = false;
       document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
-    } else if (this.variable.popupSubTitle === 'sort') {
-      const param = {
-        "ActionName" : "Sort",
-        "sortColumnNames" : ["Block"],
-        "fileList": [],
-        "mergeColumn" : "",
-        "projectColumns" : [],
-        "outputFileName" : "",
-        "encodingColumns" : [],
-        "x_columns" : [],
-        "y_columns" : "",
-        "jsonData" : ""
-      };
+
+    } else if (this.variable.popupSubTitle === 'sort' || this.variable.popupSubTitle === 'projection' || this.variable.popupSubTitle === 'encode') {
+      let param = {};
+      if (this.variable.popupSubTitle !== 'encode') {
+        param = {
+          "ActionName" : (this.variable.popupSubTitle === 'sort') ? "Sort" : "Projection",
+          "sortColumnNames" : (this.variable.popupSubTitle === 'sort') ? funParam.split(',') : [],
+          "fileList": [],
+          "mergeColumn" : "",
+          "projectColumns" : (this.variable.popupSubTitle === 'projection') ? funParam.split(',') : [],
+          "outputFileName" : "",
+          "encodingColumns" : [],
+          "x_columns" : [],
+          "y_columns" : "",
+          "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
+        };
+      } else {
+        param = {
+          "ActionName" : "Encode",
+          "fileList": [],
+          "mergeColumn" : "",
+          "projectColumns" : [],
+          "outputFileName" : "",
+          "sortColumnNames" : [],
+          "x_columns" : [],
+          "y_columns" : "",
+          "encodingColumns" : funParam.split(','),
+          "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
+        }
+      }
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
+        this.variable.outputTable.data = resp;
+        this.variable.outputTable.header = Object.keys(resp[0]);
       });
-      this.variable.actionCommonColumns = [];
-      this.variable.popupFlag = false;
-      document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
+    } else if (this.variable.popupSubTitle === 'decision tree' || this.variable.popupSubTitle === 'correlation') {
+      let param = {};
+      if (this.variable.popupSubTitle === 'decision tree') {
+        param = {
+          "ActionName" :  "Decision Tree" ,
+          "fileList": [],
+          "mergeColumn" : "",
+          "projectColumns" : [],
+          "outputFileName" : "",
+          "encodingColumns" : [],
+          "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
+        };
+      } else {
+        param = {
+          "ActionName" : "Correlation",
+          "fileList": [],
+          "mergeColumn" : "",
+          "projectColumns" : [],
+          "outputFileName" : "C:/Users/onkar/Desktop/graph/output2.png",
+          "sortColumnNames" : [],
+          "encodingColumns" : [],
+          "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
+        }
+      }
+  
+      this.crud.handleMergeAction('/action/', param).subscribe(resp => {
+        console.log(resp);
+        if (this.variable.popupSubTitle !== 'decision tree'){
+          this.variable.outputTable.data = resp;
+          this.variable.outputTable.header = Object.keys(resp[0]);
+        }
+        
+      });
     }
+    this.variable.actionCommonColumns = [];
+    this.variable.popupFlag = false;
   }
 
   public getActionSummary() {
@@ -158,5 +209,9 @@ export class DataSourceService {
 
   public exportTable() {
     TableUtil.exportTableToExcel("outputTable");
+  }
+
+  public getDataHeader(data) {
+    return Object.keys(data);
   }
 }

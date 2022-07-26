@@ -3,7 +3,7 @@
   <table>
     <tr>
       <td>DATASET</td>
-      <td>SELECT COMMON FIELD</td>
+      <td>COMMON FIELD</td>
       <td>More Details</td>
     </tr>
     <ng-container *ngFor="let data of variable.listOfDraggedFiles.data; let i = index">
@@ -28,4 +28,10 @@
 </ng-container>
 <ng-container *ngIf="variable.popupSubTitle === 'merge' && !variable.listOfDraggedFiles.data.length">
   <h2>No file is selected.</h2>
+</ng-container>
+<ng-container *ngIf="(variable.popupSubTitle === 'sort' || variable.popupSubTitle === 'projection') && (variable.listOfDraggedFiles.data.length || variable.outputTable.data.length)">
+  <div class="mt1"><strong>Please Select Below Headers comma separate and put it in input below:</strong></div>
+  <p>{{dataSource.getDataHeader(variable.outputTable.data.length ? variable.outputTable.data[0] : variable.listOfDraggedFiles.data[0].data[0])}}</p>
+  <input class="w100" type="text" [(ngModel)]="sortColumnNames" placeholder="Add columns comma separate"/>
+  <button (click)="dataSource.saveAction(sortColumnNames)" class="mt1">Save</button>
 </ng-container>
