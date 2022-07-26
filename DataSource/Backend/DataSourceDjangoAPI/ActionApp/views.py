@@ -14,6 +14,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
+import io
+import base64
 
 # Create your views here.
 
@@ -104,7 +106,16 @@ def actionApi(request):
             plt.savefig(outputFileName)
 
             result = dataFile.to_json(orient="records")
-            message = json.loads(result)
+
+            my_stringIObytes = io.BytesIO()
+            plt.savefig(my_stringIObytes, format='jpg')
+            my_stringIObytes.seek(0)
+            my_base64_jpgData = str(base64.b64encode(my_stringIObytes.read()))
+
+            response = {}
+            response['jsonData'] = result
+            response['encodedString'] = my_base64_jpgData
+            message = json.dumps(response)
 
         #analysis
         if actionName == "Decision Tree":
@@ -130,7 +141,11 @@ def actionApi(request):
 
             accuracy=accuracy_score(y_test_data,y_pred)
             format_float = "{:.2f}".format(accuracy*100)
-            message = str(format_float) + "%"
+
+            response = {}
+            acc = str(format_float) + "%"
+            response['accuracy'] = acc
+            message = json.dumps(response)
 
     return JsonResponse(message,safe=False)
 
