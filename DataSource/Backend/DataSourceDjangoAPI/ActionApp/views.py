@@ -103,7 +103,8 @@ def actionApi(request):
 
             plt.savefig(outputFileName)
 
-            message = jsonData
+            result = dataFile.to_json(orient="records")
+            message = json.loads(result)
 
         #analysis
         if actionName == "Decision Tree":
