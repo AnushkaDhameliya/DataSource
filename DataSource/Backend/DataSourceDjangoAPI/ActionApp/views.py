@@ -103,7 +103,7 @@ def actionApi(request):
 
             plt.savefig(outputFileName)
 
-            message = "Graph plotted"
+            message = jsonData
 
         #analysis
         if actionName == "Decision Tree":
