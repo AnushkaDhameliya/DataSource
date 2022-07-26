@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { VariableService } from './variable.service';
+import { CrudService } from './crud.service';
+import {TableUtil} from '../tableUtil';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataSourceService {
 
-  constructor(private variable: VariableService) { }
+  constructor(private variable: VariableService, private crud: CrudService) { }
 
   public openPopup(title = 'Data Source', action='input') {
     this.variable.popupFlag = true;
@@ -84,10 +86,46 @@ export class DataSourceService {
 
   public saveAction() {
     this.variable.listOfDraggedFiles.actionCommonColumns = this.variable.actionCommonColumns;
-    this.variable.listOfDraggedFiles.action = 'merge';
-    this.variable.actionCommonColumns = [];
-    this.variable.popupFlag = false;
-    document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
+    this.variable.listOfDraggedFiles.action = this.variable.popupSubTitle;
+    if (this.variable.popupSubTitle === 'merge') {
+      const param = {
+        "ActionName" : "Merge",
+        "fileList" : this.variable.listOfDraggedFiles.data.map(data => data.fileDetail.filePath),
+        "mergeColumn" : this.variable.listOfDraggedFiles.actionCommonColumns[0],
+        "sortColumnNames" : [],
+        "projectColumns" : [],
+        "outputFileName" : "",
+        "encodingColumns" : [],
+        "x_columns" : [],
+        "y_columns" : "",
+        "jsonData" : ""
+      };
+      this.crud.handleMergeAction('/action/', param).subscribe(resp => {
+        console.log(resp);
+      });
+      this.variable.actionCommonColumns = [];
+      this.variable.popupFlag = false;
+      document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
+    } else if (this.variable.popupSubTitle === 'sort') {
+      const param = {
+        "ActionName" : "Sort",
+        "sortColumnNames" : ["Block"],
+        "fileList": [],
+        "mergeColumn" : "",
+        "projectColumns" : [],
+        "outputFileName" : "",
+        "encodingColumns" : [],
+        "x_columns" : [],
+        "y_columns" : "",
+        "jsonData" : ""
+      };
+      this.crud.handleMergeAction('/action/', param).subscribe(resp => {
+        console.log(resp);
+      });
+      this.variable.actionCommonColumns = [];
+      this.variable.popupFlag = false;
+      document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
+    }
   }
 
   public getActionSummary() {
@@ -116,5 +154,9 @@ export class DataSourceService {
 
   public saveHeadersWithColumnSeparate() {
     this.variable.selectedData.header = this.getFirstTextLine(this.variable.selectedData.data).split(this.variable.selectedData.choiceOfSeparator === 'other' ? this.variable.selectedData.choiceOfSeparatorOther : this.variable.selectedData.choiceOfSeparator).map(option => {return{'columnHeader': option}});
+  }
+
+  public exportTable() {
+    TableUtil.exportTableToExcel("outputTable");
   }
 }

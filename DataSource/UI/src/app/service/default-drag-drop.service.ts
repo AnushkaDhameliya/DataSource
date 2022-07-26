@@ -177,7 +177,7 @@ export class DefaultDragDropService {
       case "decision_tree":
         let decision_tree = `
         <div>
-          <div class="title-box"><i class="fas fa-network-wired"></i> decision_tree</div>
+          <div class="title-box"><i class="fas fa-network-wired"></i> <span id="text" class="iconInfo">Decision Tree</span></div>
         </div>
         `;
         this.variable.editor.addNode(
@@ -194,7 +194,7 @@ export class DefaultDragDropService {
       case "regression":
         let regression = `
         <div>
-          <div class="title-box"><i class="fas fa-sort"></i> Regression</div>
+          <div class="title-box"><i class="fas fa-sort"></i> <span id="text" class="iconInfo">Regression</span></div>
         </div>
         `;
         this.variable.editor.addNode(
@@ -206,6 +206,23 @@ export class DefaultDragDropService {
           "regression",
           {},
           regression
+        );
+        break;
+      case "correlation":
+        let correlation = `
+        <div>
+          <div class="title-box"><i class="fas fa-sort"></i> <span id="text" class="iconInfo">Correlation</span></div>
+        </div>
+        `;
+        this.variable.editor.addNode(
+          "correlation",
+          1,
+          1,
+          pos_x,
+          pos_y,
+          "correlation",
+          {},
+          correlation
         );
         break;
       case "uppercase":
@@ -341,7 +358,7 @@ export class DefaultDragDropService {
         this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
         this.dataSourceService.openPopup('CHOOSE FILE','input');
       }
-      // Input Popup Event Trigger
+      // Action Popup Event Trigger
       else if (['merge','sort','projection'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
         this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
         if (!this.variable.listOfDraggedFiles.action) {
@@ -350,6 +367,11 @@ export class DefaultDragDropService {
         this.variable.listOfDraggedFiles.action.push(dataInnerHTML.toLowerCase().trim());
         this.dataSourceService.openPopup(dataInnerHTML.toLowerCase().trim()+' Action','action');
         this.variable.actionCommonColumns = this.variable.listOfDraggedFiles.actionCommonColumns;
+      }
+      // Analysis Popup Event Trigger
+      else if (['decision tree','regression','correlation'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
+        this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
+        this.dataSourceService.openPopup('Analysis: ' + this.variable.popupSubTitle, 'analysis');
       }
     });
 

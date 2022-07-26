@@ -1,0 +1,478 @@
+<!-- <div>
+  <button class="btn-clear" (click)="showOutput()"><i class="fas fa-play"></i> Run</button>
+</div> -->
+<div class="wrapper">
+	<div class="col">
+		<div class="drag-drawflow">INPUT</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="spreadsheet">
+			<i class="fas fa-file-excel"></i><span> SpreadSheet</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="database">
+			<i class="fas fa-server"></i><span> Database</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="text">
+			<i class="fas fa-file-alt"></i><span> Text File</span>
+		</div>
+		<div class="drag-drawflow">-----------------------------------------------------------</div>
+    <div class="drag-drawflow"><span> ACTION</span></div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="merge">
+			<i class="fas fa-network-wired"></i><span> MERGE</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="sort">
+			<i class="fas fa-sort"></i><span> Sort</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="projection">
+			<i class="fas fa-sort"></i><span> Projection</span>
+		</div>
+    <div class="drag-drawflow">-----------------------------------------------------------</div>
+    <div class="drag-drawflow"><span> ANALYSIS</span></div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="decision_tree">
+			<i class="fas fa-network-wired"></i><span> Decision Tree</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="regression">
+			<i class="fas fa-sort"></i><span> Regression</span>
+		</div>
+    <div class="drag-drawflow">-----------------------------------------------------------</div>
+    <div class="drag-drawflow"><span> TRANSFORMATION</span></div>
+		<div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="uppercase">
+			<span>Uppercase <strong>[TEXT]</strong></span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="lowercase">
+			<span>Lowercase <strong>[text]</strong></span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="encode">
+			<span>Encode <strong>[Text]</strong></span>
+		</div>
+    <div class="drag-drawflow">-----------------------------------------------------------</div>
+    <div class="drag-drawflow"><span> OUTPUT</span></div>
+		<div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="spreadsheetOutput">
+			<i class="fas fa-file-excel"></i><span> SpreadSheet</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="databaseOutput">
+			<i class="fas fa-server"></i><span> Database</span>
+		</div>
+    <div class="drag-drawflow" draggable="true" (dragstart)="drag($event)" data-node="textOutput">
+			<i class="fas fa-file-alt"></i><span> Text File</span>
+		</div>
+	</div>
+	<div class="col-right">
+		<div id="drawflow" (drop)="drop($event)" (dragover)="allowDrop($event)">
+			<!--div class="bar-zoom">
+				<i class="fas fa-search-minus" (click)="editor.zoom_out()"></i>
+				<i class="fas fa-search" (click)="editor.zoom_reset()"></i>
+				<i class="fas fa-search-plus" (click)="editor.zoom_in()"></i>
+			</div-->
+		</div>
+    <div>
+      <div style="position: absolute; top: -10px; margin-left: 10px;"><h2>DATA SOURCE</h2></div>
+      <div class="btn-clear" (click)="editor.clearModuleSelected()">Clear</div>
+      <button style="right: 150px;padding: 7px;min-width: 122px;" class="btn-clear" (click)="showOutput()"><i class="fas fa-play"></i> Run</button>
+    </div>
+	</div>
+  <!-- This container is popup for Choose File or see uploaded file details -->
+  <div class="popupWrapper" *ngIf="popupFlag">
+    <div class="popupContainer">
+      <span class="closeIcon" (click)="popupFlag = false"></span>
+      <!-- LIST VIEW Where we can see uploaded fILES -->
+      <div *ngIf="showTableView === 'list'">
+        <h2 class="text-center mb2 mt1">CHOOSE FILE</h2>
+        <table class="w100 noBorder">
+          <tr>
+            <td class="border-strip">
+              <strong>Upload File From Local Device</strong>
+              <div class="fileUploadContainer mt1 mb1">
+                <input id="my-file-selector" type="file" (change)="uploadData($event)" name="uploadExcel" />
+                <div class="customFileUpload">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M22.6 37.9h3V27.85l4.1 4.1 2.1-2.1-7.8-7.6-7.7 7.7 2.1 2.1 4.2-4.2ZM11 44q-1.2 0-2.1-.9Q8 42.2 8 41V7q0-1.2.9-2.1Q9.8 4 11 4h18.05L40 14.95V41q0 1.2-.9 2.1-.9.9-2.1.9Zm16.55-27.7V7H11v34h26V16.3ZM11 7v9.3V7v34V7Z"/></svg>
+                  <span>Upload File</span>
+                </div>
+              </div>
+            </td>
+            <td class="text-center">OR</td>
+            <td class="border-strip">
+              <strong>Upload File From URL</strong>
+              <div class="mt1 mb1">
+                <table class="w100">
+                  <tr>
+                    <td width="80%">
+                      <input id="my-file-selector" type="text" name="uploadExcelURL" placeholder="http://www.domain_path/filename.extension" />
+                    </td>
+                    <td>
+                      <button>Upload File</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <hr class="mt2 mb2"/>
+        <h2 class="text-center mb1 mt2">PREVIOUSLY UPLOADED {{title | uppercase}} FILES</h2>
+        <div class="border-strip uploaded-file-list" *ngFor="let resp of getSpecData(responseData)">
+          <div class="card summary flex justify-content-between" style="height: auto; position: relative;">
+            <span style="position: absolute; right: 10px; cursor: pointer;" (click)="deleteRecord(resp)"><i title="Delete" class="fas fa-trash"></i></span>
+            <div class="flex" style="flex-direction: column;">
+              <div class="title" title="{{resp?.fileDetail?.filename}}">{{resp?.fileDetail?.filename}}</div>
+              <span class="detail">Number of records: {{resp?.data.length}}</span>
+              <div class="flex align-items-center uploadedFileDetails">
+                <button title="Information" (click)="showInformationDetailMode(resp); showTableView = 'information';" type="button" label="Information" style="margin: 10px 10px 0 0"><i title="Information" class="fas fa-info-circle"></i></button>
+                <button title="Heading" (click)="showHeaderDetailMode(resp)" type="button" label="Headers" style="margin: 10px 10px 0 0"><i title="Heading" class="fas fa-heading"></i></button>
+                <button title="View Details" (click)="showViewDetailMode(resp); showTableView = 'detail';" type="button" label="View Details" style="margin: 10px 10px 0 0"><i title="View Details" class="fas fa-eye"></i></button>
+                <button (click)="selectFile(resp); showTableView = 'list';" type="button" label="Select File" style="margin: 10px 10px 0 0"><i title="Select" class="fas fa-check"></i></button>
+                <button type="button" title="Refresh" style="margin: 10px 10px 0 0">
+                  <svg style="height: 14px; fill: white;" title="Refresh" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 16c-17.67 0-32 14.31-32 32v74.09C392.1 66.52 327.4 32 256 32C161.5 32 78.59 92.34 49.58 182.2c-5.438 16.81 3.797 34.88 20.61 40.28c16.89 5.5 34.88-3.812 40.3-20.59C130.9 138.5 189.4 96 256 96c50.5 0 96.26 24.55 124.4 64H336c-17.67 0-32 14.31-32 32s14.33 32 32 32h128c17.67 0 32-14.31 32-32V48C496 30.31 481.7 16 464 16zM441.8 289.6c-16.92-5.438-34.88 3.812-40.3 20.59C381.1 373.5 322.6 416 256 416c-50.5 0-96.25-24.55-124.4-64H176c17.67 0 32-14.31 32-32s-14.33-32-32-32h-128c-17.67 0-32 14.31-32 32v144c0 17.69 14.33 32 32 32s32-14.31 32-32v-74.09C119.9 445.5 184.6 480 255.1 480c94.45 0 177.4-60.34 206.4-150.2C467.9 313 458.6 294.1 441.8 289.6z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="border-strip p2 text-center" *ngIf="!getSpecData(responseData).length">
+          No Record Found
+        </div>
+      </div>
+      <!-- DETAIL VIEW Where we can see SELECTED FILE DETAIL SECTION -->
+      <div *ngIf="showTableView === 'detail'">
+        <span style="cursor: pointer; margin-right: 10px;" (click)="showTableView = 'list'"><i title="Delete" class="fas fa-arrow-left"></i> BACK TO LIST VIEW</span>
+        <h2>Details</h2>
+        <div *ngIf="(selectedData.fileDetail.fileType === 'txt' || selectedData.fileDetail.fileType === 'sql') && !selectedData.header.length">{{selectedData.data}}</div>
+        <table class="w100" cellpadding="0" cellspacing="0" *ngIf="(selectedData.fileDetail.fileType === 'txt' || selectedData.fileDetail.fileType === 'sql') && selectedData.header.length">
+          <thead>
+            <tr>
+              <th *ngFor="let header of selectedData.header">{{header.title ? header.title : header.columnHeader}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of selectedData.data">
+              <td *ngFor="let header of selectedData.header; let i = index">{{data[i] ? data[i] : data[selectedData.header[i]['columnHeader']]}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table cellpadding="0" cellspacing="0" *ngIf="selectedData.fileDetail.fileType === 'csv' || selectedData.fileDetail.fileType === 'xlsx'">
+          <thead>
+            <tr>
+              <th *ngFor="let header of selectedData.header">{{header}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of selectedData.data">
+              <td *ngFor="let header of selectedData.header">{{data[header]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- DETAIL VIEW Where we can see SELECTED FILE INFORMATION SECTION -->
+      <div *ngIf="showTableView === 'information'">
+        <span style="cursor: pointer; margin-right: 10px;" (click)="showTableView = 'list'"><i title="Delete" class="fas fa-arrow-left"></i> BACK TO LIST VIEW</span>
+        <h2>INFORMATION</h2>
+        <div *ngIf="selectedData?.information">{{selectedData.information}}</div>
+        <div *ngIf="!selectedData?.information">
+          <textarea [(ngModel)]="information" class="w100 mb2" style="height: 130px;"></textarea>
+          <button class="btn-clear reset-button" (click)="updateInformation()">Submit</button>
+        </div>
+      </div>
+      <!-- DETAIL VIEW Where we can see SELECTED FILE HEADER SECTION -->
+      <div *ngIf="showTableView === 'header'">
+        <span style="cursor: pointer; margin-right: 10px;" (click)="showTableView = 'list'"><i title="Delete" class="fas fa-arrow-left"></i> BACK TO LIST VIEW</span>
+        <h2>Headers</h2>
+        <div *ngIf="selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql'">
+          <ng-container *ngIf="!selectedData.header.length">
+            <p>Please answer below answers for smooth experience</p>
+            <label>Do you want to use 1st line as header?</label><br/>
+            <select [(ngModel)]="headersQuestion.q1" class="my1 w100">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+            <br/><label>How do you want to separate headers?</label>
+            <br/><select [(ngModel)]="headersQuestion.q2" class="my1 w100">
+              <option value="columnSeparate">Column Seperated by Characters</option>
+              <option value="characterRange">Character Range for Columns</option>
+            </select>
+            <!-- Coloumn separate Header Separation Logic -->
+            <ng-container *ngIf="headersQuestion.q2 === 'columnSeparate'">
+              <br/><label>Select column separator</label>
+              <!--input type="text" [(ngModel)]="choiceOfSeparator" (change)="splitHeaders($event)" /><br/><br/-->
+              <select [(ngModel)]="choiceOfSeparator" class="my1 w100">
+                <ng-container *ngFor="let separator of separatorList">
+                  <option value="{{separator}}">{{separator === ' ' ? 'Space' : separator}}</option>
+                </ng-container>
+                <option value="other">OTHER</option>
+              </select>
+              <input *ngIf="choiceOfSeparator === 'other'" type="text" [(ngModel)]="choiceOfSeparatorOther" class="my1" />
+              <button *ngIf="headersQuestion.q1 === 'Yes'" (click)="saveChoiceOfSeparator1()">Save</button>
+            </ng-container>
+            <!-- Character Range Header Separation Logic -->
+            <ng-container *ngIf="headersQuestion.q2 === 'characterRange'">
+              <br/><strong>Data: [FIRST LINE]</strong>
+              <div>{{getFirstTextLine(selectedData.data)}}</div>
+              <button (click)="columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Row</button>
+              <table>
+                <tr>
+                  <th>Column Header</th>
+                  <th>Character Range</th>
+                  <th>Action</th>
+                </tr>
+                <tr *ngFor="let column of columnSeparatorArray; let i = index">
+                  <td>
+                    <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.columnHeader" placeholder="Column Header" />
+                  </td>
+                  <td>
+                    <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.charRange" placeholder="1,5" />
+                  </td>
+                  <td>
+                    <button (click)="columnSeparatorArray.splice(i, 1)">Delete</button>
+                  </td>
+                </tr>
+              </table>
+              <button class="mt1" (click)="handleDataSeparator(selectedData.id)">Save</button>
+            </ng-container>
+            <ng-container *ngIf="headersQuestion.q1 === 'No'">
+              <p>Add Headers</p>
+              <strong>Data: [FIRST LINE]</strong>
+              <div>{{getFirstTextLine(selectedData.data)}}</div>
+              <button (click)="columnSeparatorArray.push({columnHeader: ''})">Add Row</button>
+              <table>
+                <tr>
+                  <th>Column Header</th>
+                  <th>Action</th>
+                </tr>
+                <tr *ngFor="let column of columnSeparatorArray; let i = index">
+                  <td>
+                    <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.columnHeader" placeholder="Column Header" />
+                  </td>
+                  <td>
+                    <button (click)="columnSeparatorArray.splice(i, 1)">Delete</button>
+                  </td>
+                </tr>
+              </table>
+              <button class="mt1" (click)="addHeaders(selectedData.id, columnSeparatorArray)">Save</button>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="selectedData.header.length">
+            <p *ngIf="selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql'">Please follow below steps:</p>
+            <table *ngIf="selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql'">
+              <tr>
+                <td>Step 1</td>
+                <td>Step 2</td>
+                <td>Step 3</td>
+              </tr>
+              <tr>
+                <td>Select Choice of Separator</td>
+                <td>Select separator from dropdown</td>
+                <td>Select Column Separator to see list of headers</td>
+              </tr>
+            </table>
+          </ng-container>
+        </div>
+        <div style="margin: 10px 0;" *ngIf="selectedData.header.length">
+          <button class="btn-clear reset-button mr1" *ngIf="selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql'" (click)="headerAction = 'choiceOfSeparator'">Choice of Separator</button>
+          <button class="btn-clear reset-button mr1" *ngIf="(selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql') && !selectedData.header.length" (click)="headerAction = 'columnSeparator'; devideHeaders = selectedData.header">Column Separator</button>
+          <!--button class="btn-clear reset-button mr1" *ngIf="selectedData.fileDetail.fileType == 'xlsx' || selectedData.fileDetail.fileType == 'csv'" (click)="headerAction = 'showHeader'">Show Header</button-->
+          <button class="btn-clear reset-button mr1" *ngIf="selectedData.header.length" (click)="headerAction = 'showHeader'">Show Header</button>
+          <!--button class="btn-clear reset-button" *ngIf="selectedData.fileDetail.fileType == 'xlsx' || selectedData.fileDetail.fileType == 'csv'" (click)="headerAction = 'changeHeader'">Change Header</button-->
+          <button class="btn-clear reset-button" *ngIf="selectedData.header.length" (click)="headerAction = 'changeHeader'">Change Header</button>
+        </div>
+        <ng-container *ngIf="headerAction == 'showHeader' && selectedData.header.length">
+          <table cellpadding="0" cellspacing="0" width="100%">
+            <ng-container *ngIf="selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql'">
+              <tr *ngFor="let header of selectedData.header; let i = index;" style="padding: 10px; text-align: left; border: 1px solid #eee; background: #eee; color: #333;">
+                <th>{{header.title ? header.title : header.columnHeader}}</th>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="selectedData.fileDetail.fileType == 'xlsx' || selectedData.fileDetail.fileType == 'csv'">
+              <tr *ngFor="let header of selectedData.header; let i = index;" style="padding: 10px; text-align: left; border: 1px solid #eee; background: #eee; color: #333;">
+                <th>{{header}}</th>
+              </tr>
+            </ng-container>
+          </table>
+        </ng-container>
+        <ng-container *ngIf="headerAction == 'changeHeader' && selectedData.header.length">
+          <div *ngIf="selectedData.fileDetail.fileType == 'xlsx' || selectedData.fileDetail.fileType == 'csv'">
+            <table cellpadding="0" cellspacing="0" width="100%">
+              <tr *ngFor="let header of selectedData.header; let i = index;">
+                <th>{{header}}</th>
+                <td><input type="text" [(ngModel)]="headers[i]" /></td>
+              </tr>
+            </table>
+            <div>
+              <button class="btn-clear reset-button" (click)="updateHeaders()">Submit</button>
+            </div>
+          </div>
+          <div *ngIf="selectedData.fileDetail.fileType == 'txt' || selectedData.fileDetail.fileType == 'sql'">
+            <table cellpadding="0" cellspacing="0" width="100%">
+              <tr *ngFor="let header of selectedData.header; let i = index;">
+                <th>{{header.title ? header.title : header.columnHeader}}</th>
+                <td><input type="text" [(ngModel)]="headers[i]" /></td>
+              </tr>
+            </table>
+            <div>
+              <button class="btn-clear reset-button" (click)="updateHeaders()">Submit</button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="headerAction == 'columnSeparator' && !selectedData.header.length">
+          <ng-container *ngIf="devideHeaders.length">
+            <blockquote class="successAlert">Keep these headers or update if required</blockquote>
+            <table>
+              <tr>
+                <th>Column</th>
+                <th>Table Column no</th>
+              </tr>
+              <tr *ngFor="let header of devideHeaders; let i = index">
+                <td>{{selectedData.header[i]['title']}}</td>
+                <td>
+                  <input type="text" [(ngModel)]="header.column" />
+                </td>
+              </tr>
+            </table>
+            <button (click)="saveHeader()">Save These Headers</button>
+          </ng-container>
+          <ng-container *ngIf="!devideHeaders.length">
+            <strong>Data: [FIRST LINE]</strong>
+            <div>{{getFirstTextLine(selectedData.data)}}</div>
+            <button (click)="columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Row</button>
+            <table>
+              <tr>
+                <th>Column Header</th>
+                <th>Character Range</th>
+                <th>Action</th>
+              </tr>
+              <tr *ngFor="let column of columnSeparatorArray; let i = index">
+                <td>
+                  <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.columnHeader" placeholder="Column Header" />
+                </td>
+                <td>
+                  <input type="text" name="colHeader{{i}}" id="colHeader{{i}}" [(ngModel)]="column.charRange" placeholder="1,5" />
+                </td>
+                <td>
+                  <button (click)="columnSeparatorArray.splice(i, 1)">Delete</button>
+                </td>
+              </tr>
+            </table>
+            <button class="mt1" (click)="handleDataSeparator(selectedData.id)">Save</button>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="headerAction == 'choiceOfSeparator'">
+          <div>
+            <label>Select column separator</label>
+            <!--input type="text" [(ngModel)]="choiceOfSeparator" (change)="splitHeaders($event)" /><br/><br/-->
+            <select [(ngModel)]="choiceOfSeparator" class="my1 w100">
+              <ng-container *ngFor="let separator of separatorList">
+                <option value="{{separator}}">{{separator === ' ' ? 'Space' : separator}}</option>
+              </ng-container>
+              <option value="other">OTHER</option>
+            </select>
+            <input *ngIf="choiceOfSeparator === 'other'" type="text" [(ngModel)]="choiceOfSeparatorOther" class="my1" />
+            <button (click)="saveChoiceOfSeparator()">Save</button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <!-- Output Popup -->
+  <div class="popupWrapper" *ngIf="popupFlagExport">
+    <div class="popupContainer">
+      <span class="closeIcon" (click)="popupFlagExport = false"></span>
+      <h3>Output</h3>
+      <div style="width: 100%; overflow: auto;">
+        <table id="outputTable" style="color: #333;" cellpadding="0" cellspacing="0">
+          <tr>
+            <th *ngFor="let header of outputTableHeaders" style="padding: 10px; text-align: left; border: 1px solid #eee; background: #eee; color: #333;">{{header | uppercase}}</th>
+          </tr>
+          <tr *ngFor="let data of outputTable;">
+            <td style="border: 1px solid #eee; padding: 10px; text-align: left;" *ngFor="let header of outputTableHeaders">{{data[header]}}</td>
+          </tr>
+        </table>
+        <button (click)="exportTable()" type="button" label="Download" class="btn-clear reset-button" style="float: right;">Download</button>
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBYRXhpZgAATU0AKgAAAAgAAgESAAMAAAABAAEAAIdpAAQAAAABAAAAJgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAACgKADAAQAAAABAAAB4AAAAAD/7QA4UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAAA4QklNBCUAAAAAABDUHYzZjwCyBOmACZjs+EJ+/8AAEQgB4AKAAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMABgYGBgYGCgYGCg4KCgoOEg4ODg4SFxISEhISFxwXFxcXFxccHBwcHBwcHCIiIiIiIicnJycnLCwsLCwsLCwsLP/bAEMBBwcHCwoLEwoKEy4fGh8uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLv/dAAQAKP/aAAwDAQACEQMRAD8A+qaKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/9D6pooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//0fqmiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA4ZvHCNqF9YWWkajef2fN5E0sCwlA+1XwA0yueGH8NdBoev6Z4is2vdMcsqO0UiOpSSKRPvI6MAVYdwf5VxvhC7tbXWPFbXMyRAapkl2C8fZ4uea8/1G/vpNN8beJ/DbMLK7urOKKeNigZIgkV1KjgHC4JHmKD0LDpQB9F0V4j4f0i4s/Eml3uj2mm6XbsJFuFtdQa4N3GYyV+QxJvZWAbfknGe1SeBNO8MatpcWu+I/Km14XT/AGqSeTE0NwspCxgEgoFwAqjAIxwc0AewQXDzTTxNBJEIWCq77dsgKg5TDE4GcHcAcjpjmppnMUTyqjSFVJCLjc2B0GSBk9skCvHJ7JtSfxxYJepp7T3lqgnkbYoJgg+ViCpAk+4cHOG45qrpz6bpy654fTSrOwvRpMtw0unzGWCSPBX5gVQq+TkBgSRnmgD2u3laeCOZ42hZ1DGN8bkJGdrbSRkdDgkehqavB7eKx1Gbwdo/iQj+yZNEWSOKRtsM12qRAK4yA22MkqDWLrIiXwj4x0rSJWbSLa9s47NlYusbs8JmSNiT8qOeAOASRQB9JVkavqlxpiRvb6ddagXJBW18rKY7t5skYwfbNcFJouneGfHWgrokZtxqEd5HdYZj53lxq6NJknc4b+I88nmvVKAOF0Lxx/wkDr9j0XUkh854HmkFuI0eNir7sTlsKQQcKfau6r5yuIBc/D9rYsyeb4mKbkJVl3X5GVI5BHY1seLdItdJ13SNBsNPtv7KuluJ3t5rhrWC4uwEUea4STewQZCsPm5POKAPdaK+er2LxDoHhPxH/Z/2e0ti9q0NtZ3jT/ZI3YLckP5amJWX5hhTt+YgcVr+H9Iu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J6AUAUND1bSdasftujNug8yRD+7aIiRWIkBV1Vgd2c5HWtevMvhtrmjajb6la2F5DPL/AGnfz7I3DN5Uly5R8D+FgQQe+a9NoAKKKKACiiigAooooAKKKKACuX07xX4a1K/S2s5j9ouFIjLwyRCZY8tiN3RVkCgk/KTgZNdRXkeneK/D/jXxNaTRajapbadM5srfzU+0XVxsaMybM7ljVWYIMZbO44AGQD1yiiigAooooAKKKKACiiigAooooA5nVvFHh7S5jaas7p5e13dreV4U5BVnlCGNcHByWGOtdKCGAZTkHkEV5Z8RdV0yewvNIXWvst0kDq2nqqs13vUFYyu3ziHB25iZTyec9PSNPLmwtzJF5DGJN0XXyztGV/4D0oAuUUUUAFFFFABRRRQAUUUUAFIxVVLMQABkk9MUtcn4wsdb1LT4rHSIoZo5JR9rjlmaDzIACTGHVJMBjgN8vK5HGcgA09B1nRtcsPtWgyrLaxuYQVRkUFOCFDAcDsRwR0rZrzX4bSak0WspfWsNsq6pc7RFKZPnLfOuDGmFXjB/iz0GOfSqACiiigAooooAKKKKACiiigCKeeK2gkuZztjiUuxwThVGScDnpWDoniPRdccnSVn/AHqCfzJLS4gR1IUBhJLGisSMYwSSPYVral9l/s65+3Nst/JfzWGeE2nceMngV5l4audNg8R2WmeDtRm1HTBaSC6RpmuYYPL2CHbIxOxj8w2BsYGdoxQB61RRRQAUUUUAFFFFABRRRQAUUUUAf//T+qaKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiivKfFOs+INQsfEtvpSWwstLt5IJhMHMsztbiV9jBgqBVcYyrbjnoOaAPVqK8VvvHN34d0mF7Wa3nSxsreSa1W2uJZdvlKxDTx5jhJXld64xgkgGujsbjxFcfEDUooL2H+z47Wxl8iSKRjskM2dh80KjkqdzbDkbRj5ckA9Horyux8d3Mmv2Vg81ve2l/PJbo9vbXMaxsqO6kTyZhmB2EHbg9wCAa9UoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//U+qaKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACuM1jwPp+sT3spu7u1TUoxHdxW8irHNhdgZtyMQ23AO0jIADZFdnRQB57efDfSru1urAXt9Ba30SR3EMUiKkjJGsSyHMZYNtVcgEKccqRkVvt4bgGsJrVtdXFvL5UcEyRmMxzxxFigkDox43typU89a6OigDg7L4fabZS6ey3t7JFpUvm2cDyIY4hsZNgAQFlw3BYlhgAMBkHvKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/Z"/>
+      </div>
+    </div>
+  </div>
+  <!-- Action Popup -->
+  <div class="popupWrapper" *ngIf="popupFlagAction">
+    <div class="popupContainer">
+      <span class="closeIcon" (click)="popupFlagAction = false"></span>
+      <h3 class="mb1">ACTION: {{actionEvent | uppercase}}</h3>
+      <div *ngIf="showDetailData == false">
+        <strong class="mb1" style="display: block;">Please Select Option</strong>
+        <ng-container *ngIf="actionEvent === 'Merge'">
+          <table>
+            <tr>
+              <td>DATASET</td>
+              <td>COMMON FIELD</td>
+              <td>ACTION</td>
+            </tr>
+            <ng-container *ngFor="let data of selectedData; let i = index" style="margin-bottom: 10px;">
+              <tr>
+                <td>{{data.fileDetail.filename}}</td>
+                <td>
+                  <select [(ngModel)]="actionCommonColumns[i]" style="padding: 5px 10px; margin-left: 10px; min-width: 200px;">
+                    <ng-container *ngFor="let head of data.header">
+                      <option [value]="head">{{head}}</option>
+                    </ng-container>
+                  </select>
+                </td>
+                <td><span class="pointer" (click)="showDetailData = true; showDetailDataInfo = data">View</span></td>
+              </tr>
+            </ng-container>
+          </table>
+        </ng-container>
+        <ng-container *ngIf="actionEvent.includes('.csv') || actionEvent.includes('.xlsx')">
+          <table cellpadding="0" cellspacing="0" style="border-right: 1px solid #333;">
+            <thead>
+              <tr>
+                <th *ngFor="let header of actionEventData?.header">{{header}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of actionEventData?.data">
+                <td *ngFor="let header of actionEventData?.header">{{data[header]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
+      <div *ngIf="showDetailData == true">
+        <span style="cursor: pointer" (click)="showDetailData = false"><i title="Delete" class="fas fa-arrow-left"></i> BACK TO LIST VIEW</span>
+        <div class="w100 mt1">
+          <button class="mr1" (click)="showDetailDataAction = 'info'">File Info</button>
+          <button class="mr1" (click)="showDetailDataAction = 'header'">File Headers</button>
+          <button class="mr1" (click)="showDetailDataAction = 'data'">File Data</button>
+        </div>
+        <div *ngIf="showDetailDataAction === 'info'" style="width: 100%;">
+          {{showDetailDataInfo.fileDetail.filename}} File Information
+          <table>
+            <tr>
+              <td>File Name</td>
+              <td>{{showDetailDataInfo.fileDetail.filename}}</td>
+            </tr>
+            <tr>
+              <td>File Type</td>
+              <td>{{showDetailDataInfo.fileDetail.fileType}}</td>
+            </tr>
+            <tr>
+              <td>File Information</td>
+              <td>{{showDetailDataInfo.information ? showDetailDataInfo.information : 'No Information Found'}}</td>
+            </tr>
+          </table>
+        </div>
+        <div *ngIf="showDetailDataAction === 'header'">
+          {{showDetailDataInfo.fileDetail.filename}} File Headers
+          <ul>
+            <li *ngFor="let head of showDetailDataInfo.header">{{head}}</li>
+          </ul>
+        </div>
+        <div *ngIf="showDetailDataAction === 'data'">
+          {{showDetailDataInfo.fileDetail.filename}} File Data
+          <table>
+            <tr>
+              <th *ngFor="let head of showDetailDataInfo.header">{{head}}</th>
+            </tr>
+            <tr *ngFor="let data of showDetailDataInfo.data">
+              <td *ngFor="let head of showDetailDataInfo.header">{{data[head]}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
