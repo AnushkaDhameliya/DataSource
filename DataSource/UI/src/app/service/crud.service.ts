@@ -32,10 +32,13 @@ export class CrudService {
 
   public uploadData(e: any) {
     // console.log(e.target.files[0]['name']);
+    console.log(e.target.value);
+    console.log(e.target.result);
     const fileName = e.target.files[0]['name'];
     const fileDetails = {
       filename: fileName,
-      fileType: fileName.split('.')[fileName.split('.').length - 1]
+      fileType: fileName.split('.')[fileName.split('.').length - 1],
+      filePath: "C:\\Users\\onkar\\Downloads\\" + fileName
     };
     // console.log(fileDetails);
     if (fileDetails.fileType === 'csv' || fileDetails.fileType === 'xlsx') {
@@ -151,5 +154,9 @@ export class CrudService {
     }
     localStorage.setItem('mockData', JSON.stringify(uploadedDataList));
     this.getData('/getData');
+  }
+
+  public handleMergeAction(url, data) {
+    return this.http.post(url, data);
   }
 }

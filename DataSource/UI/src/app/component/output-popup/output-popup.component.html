@@ -1,12 +1,15 @@
 <div class="w100">
   <button class="mr1 mb1" [class.active]="viewData" (click)="viewData = true">Show Data</button>
   <button class="mb1" [class.active]="!viewData" (click)="viewData = false">Show Graph</button>
+  <div class="floatRight">
+    <button class="mb1" (click)="dataSource.exportTable()">Download File</button>
+  </div>
 </div>
 <ng-container *ngIf="viewData">
   <!--====<pre>{{variable.listOfDraggedFiles | json}}</pre>====-->
   <!--====<pre>{{variable.outputTable | json}}</pre>====-->
   <div class="w100" style="overflow: auto;">
-    <table class="w100">
+    <table class="w100" id="outputTable">
       <tr>
         <th *ngFor="let header of variable.outputTable.header">
           {{header}}
