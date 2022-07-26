@@ -262,7 +262,7 @@ export class DefaultDragDropService {
       case "encode":
         let encode = `
         <div>
-          <div class="title-box">Encode [Text]</div>
+          <div class="title-box"><span id="text" class="iconInfo">Encode</span> [Text]</div>
         </div>
         `;
         this.variable.editor.addNode(
@@ -364,9 +364,17 @@ export class DefaultDragDropService {
         if (!this.variable.listOfDraggedFiles.action) {
           this.variable.listOfDraggedFiles.action = [];
         }
+        if(typeof this.variable.listOfDraggedFiles.action === 'string'){
+          this.variable.listOfDraggedFiles.action = [ this.variable.listOfDraggedFiles.action];
+        }
         this.variable.listOfDraggedFiles.action.push(dataInnerHTML.toLowerCase().trim());
         this.dataSourceService.openPopup(dataInnerHTML.toLowerCase().trim()+' Action','action');
         this.variable.actionCommonColumns = this.variable.listOfDraggedFiles.actionCommonColumns;
+      }
+      // Transformation Popup Event Trigger
+      else if (['uppercase','lowercase','encode'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
+        this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
+        this.dataSourceService.openPopup('Transformation: ' + this.variable.popupSubTitle, 'transformation');
       }
       // Analysis Popup Event Trigger
       else if (['decision tree','regression','correlation'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {

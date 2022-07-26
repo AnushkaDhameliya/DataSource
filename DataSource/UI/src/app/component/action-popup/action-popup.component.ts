@@ -10,6 +10,8 @@ import { CrudService } from '../../service/crud.service';
 })
 export class ActionPopupComponent implements OnInit {
 
+  public sortColumnNames = '';
+
   constructor(public variable: VariableService, public dataSource: DataSourceService, public crud: CrudService) { }
 
   ngOnInit(): void {

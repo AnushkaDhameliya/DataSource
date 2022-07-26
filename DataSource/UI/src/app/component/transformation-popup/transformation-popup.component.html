@@ -1,1 +1,4 @@
-<p>transformation-popup works!</p>
+<div class="mt1"><strong>Please Select Below Headers comma separate and put it in input below:</strong></div>
+<p>{{dataSource.getDataHeader(variable.outputTable.data.length ? variable.outputTable.data[0] : variable.listOfDraggedFiles.data[0].data[0])}}</p>
+<input class="w100" type="text" [(ngModel)]="sortColumnNames" placeholder="Add columns comma separate"/>
+<button (click)="dataSource.saveAction(sortColumnNames)" class="mt1">Save</button>
