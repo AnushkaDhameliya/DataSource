@@ -112,10 +112,13 @@ def actionApi(request):
             my_stringIObytes.seek(0)
             my_base64_jpgData = str(base64.b64encode(my_stringIObytes.read()))
 
-            response = {}
-            response['jsonData'] = result
-            response['encodedString'] = my_base64_jpgData
-            message = json.dumps(response)
+            #response['jsonData'] = result
+            #response['encodedString'] = my_base64_jpgData
+            response = {
+                "jsonData" : result,
+                "encodedString" : my_base64_jpgData
+            }
+            message = response
 
         #analysis
         if actionName == "Decision Tree":
@@ -142,10 +145,9 @@ def actionApi(request):
             accuracy=accuracy_score(y_test_data,y_pred)
             format_float = "{:.2f}".format(accuracy*100)
 
-            response = {}
             acc = str(format_float) + "%"
-            response['accuracy'] = acc
-            message = json.dumps(response)
+            response = { "accuracy" : acc }
+            message = response
 
     return JsonResponse(message,safe=False)
 
