@@ -39,6 +39,7 @@ export class VariableService {
     q2: ''
   };
   public accuracy = null;
+  public encodeString = null;
   public separatorList = [' ',',',';',"'",'"','!','@','~','#','$'];
 
   constructor() {}

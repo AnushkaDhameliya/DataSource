@@ -168,6 +168,10 @@ export class DataSourceService {
   
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
+        if(this.variable.popupSubTitle === 'correlation'){
+          //@ts-ignore
+          this.variable.encodeString = JSON.parse(resp).encodedString
+        }
         if (this.variable.popupSubTitle !== 'decision tree'){
           this.variable.outputTable.data = resp;
           this.variable.outputTable.header = Object.keys(resp[0]);
