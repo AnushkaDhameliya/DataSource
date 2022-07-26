@@ -169,12 +169,18 @@ export class DataSourceService {
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
         if(this.variable.popupSubTitle === 'correlation'){
-          //@ts-ignore
-          this.variable.encodeString = JSON.parse(resp).encodedString
+          if(typeof resp === 'string') {
+            //@ts-ignore
+            this.variable.encodeString = 'data:image/jpeg;base64,' + JSON.parse(resp).encodedString.substring(2, resp.encodedString.length - 1);
+          } else {
+            //@ts-ignore
+            this.variable.encodeString = 'data:image/jpeg;base64,' + resp.encodedString.substring(2, resp.encodedString.length - 1);
+          }
         }
         if (this.variable.popupSubTitle !== 'decision tree'){
-          this.variable.outputTable.data = resp;
-          this.variable.outputTable.header = Object.keys(resp[0]);
+          // @ts-ignore
+          this.variable.outputTable.data = typeof resp.jsonData === 'string' ? JSON.parse(resp.jsonData) : resp.jsonData;
+          this.variable.outputTable.header = Object.keys(this.variable.outputTable.data[0]);
         }
         
       });

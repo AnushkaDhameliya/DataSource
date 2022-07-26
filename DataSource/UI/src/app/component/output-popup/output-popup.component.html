@@ -22,6 +22,10 @@
   </div>
 </ng-container>
 <ng-container *ngIf="!viewData">
-  <img src="C:/Users/onkar/Desktop/graph/output2.png">
+  <ng-container *ngIf="variable.encodeString">
+    <div class="w100">
+      <img class="w100" [src]="getImgUrl()">
+    </div>
+  </ng-container>
 </ng-container>
 
