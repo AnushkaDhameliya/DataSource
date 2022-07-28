@@ -471,7 +471,7 @@ button:disabled,
 
 .drawflow .connection {
   position: absolute;
-  transform: translate(9999px, 9999px);
+  transform: translate(9999px, 10025px);
 }
 
 .drawflow .connection .main-path {

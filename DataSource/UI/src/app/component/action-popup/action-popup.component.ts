@@ -11,10 +11,19 @@ import { CrudService } from '../../service/crud.service';
 export class ActionPopupComponent implements OnInit {
 
   public sortColumnNames = '';
+  public selectedCheckboxes = [];
 
   constructor(public variable: VariableService, public dataSource: DataSourceService, public crud: CrudService) { }
 
   ngOnInit(): void {
+  }
+
+  public onCheckboxChange(e) {
+    if (e.target.checked) {
+      this.selectedCheckboxes.push(e.target.value);
+    } else {
+      this.selectedCheckboxes.splice(this.selectedCheckboxes.indexOf(e.target.value),1);
+    }
   }
 
 }

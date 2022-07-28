@@ -1,5 +1,6 @@
-<span *ngIf="variable.popupSubTitle === 'spreadsheet' || variable.popupSubTitle === 'database' || variable.popupSubTitle === 'text'" (click)="dataSource.backToList()"><- Back</span><br/>
+<span class="cursorPointer" *ngIf="(variable.popupSubTitle === 'spreadsheet' || variable.popupSubTitle === 'database' || variable.popupSubTitle === 'text')" (click)="dataSource.backToList()"><- Back</span><br/>
 <span class="cursorPointer" *ngIf="variable.popupSubTitle === 'merge'" (click)="dataSource.backToAction()"><- Back</span>
+<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'detail'" (click)="dataSource.backToDetail()"><- Back</span>
 <br/>
 <ng-container *ngIf="variable.selectedData.information">
   <textarea class="w100 mb2" disabled>{{variable.selectedData.information}}</textarea>

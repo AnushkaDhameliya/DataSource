@@ -41,6 +41,7 @@ export class VariableService {
   public accuracy = null;
   public encodeString = null;
   public separatorList = [' ',',',';',"'",'"','!','@','~','#','$'];
+  public selectedRecordForDetail = null;
 
   constructor() {}
 

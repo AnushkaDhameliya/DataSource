@@ -1,5 +1,6 @@
-<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'spreadsheet' || variable.popupSubTitle === 'database' || variable.popupSubTitle === 'text'" (click)="dataSource.backToList()"><- Back</span>
+<span class="cursorPointer" *ngIf="(variable.popupSubTitle === 'spreadsheet' || variable.popupSubTitle === 'database' || variable.popupSubTitle === 'text')" (click)="dataSource.backToList()"><- Back</span>
 <span class="cursorPointer" *ngIf="variable.popupSubTitle === 'merge'" (click)="dataSource.backToAction()"><- Back</span>
+<span class="cursorPointer" *ngIf="variable.popupSubTitle === 'detail'" (click)="dataSource.backToDetail()"><- Back</span>
 <!-- First Time setting headers -->
 <table class="w100" *ngIf="!variable.selectedData.header.length">
   <tr>

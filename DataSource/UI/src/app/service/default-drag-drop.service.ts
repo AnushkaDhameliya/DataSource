@@ -381,6 +381,19 @@ export class DefaultDragDropService {
         this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
         this.dataSourceService.openPopup('Analysis: ' + this.variable.popupSubTitle, 'analysis');
       }
+      else if(dataInnerHTML.toLowerCase().trim().includes("csv") || dataInnerHTML.toLowerCase().trim().includes("xlsx")) {
+        this.variable.selectedRecordForDetail = [];
+        const iteratedTable = this.variable.uploadedDataList.filter(data => data.fileDetail.filename.toLowerCase().trim() === dataInnerHTML.toLowerCase().trim())[0];
+        if (iteratedTable) {
+          this.variable.popupSubTitle = 'detailData';
+          this.variable.selectedRecordForDetail = iteratedTable;
+        } else {
+          this.variable.popupSubTitle = 'detail';
+          this.variable.selectedRecordForDetail = this.variable.outputTable;
+        }
+        this.dataSourceService.showData(this.variable.selectedRecordForDetail);
+        this.dataSourceService.openPopup('Details of : ' + dataInnerHTML.toLowerCase().trim(), 'detail');
+      }
     });
 
     editor.on("moduleCreated", name => {

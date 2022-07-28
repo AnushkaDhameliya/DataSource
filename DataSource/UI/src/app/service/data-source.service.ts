@@ -57,14 +57,24 @@ export class DataSourceService {
   }
 
   public showData(resp: any) {
-    this.variable.selectedData = resp;
-    this.variable.popupTitle = 'Data ' + resp.fileDetail.filename;
+    if (resp.data) {
+      this.variable.selectedData = resp;
+      this.variable.popupTitle = 'Details ';
+    } else {
+      this.variable.selectedData = resp;
+      this.variable.popupTitle = 'Data ' + resp.fileDetail.filename;
+    }
     this.variable.popupAction = 'file-data';
   }
 
   public showHead(resp: any) {
-    this.variable.selectedData = resp;
-    this.variable.popupTitle = 'Headers of file ' + resp.fileDetail.filename;
+    if (resp.data) {
+      this.variable.selectedData = resp;
+      this.variable.popupTitle = 'Details ';
+    } else {
+      this.variable.selectedData = resp;
+      this.variable.popupTitle = 'Data ' + resp.fileDetail.filename;
+    }
     this.variable.popupAction = 'file-head';
   }
 
@@ -76,6 +86,11 @@ export class DataSourceService {
   public backToAction() {
     this.variable.popupAction = 'action';
     this.variable.popupTitle = 'MERGE ACTION';
+  }
+
+  public backToDetail() {
+    this.variable.popupAction = 'detail';
+    this.variable.popupTitle = 'Details of : ' + this.variable.selectedRecordForDetail.fileDetail.filename;
   }
 
   public selectFile(resp) {
@@ -112,10 +127,10 @@ export class DataSourceService {
       if (this.variable.popupSubTitle !== 'encode') {
         param = {
           "ActionName" : (this.variable.popupSubTitle === 'sort') ? "Sort" : "Projection",
-          "sortColumnNames" : (this.variable.popupSubTitle === 'sort') ? funParam.split(',') : [],
+          "sortColumnNames" : (this.variable.popupSubTitle === 'sort') ? funParam : [],
           "fileList": [],
           "mergeColumn" : "",
-          "projectColumns" : (this.variable.popupSubTitle === 'projection') ? funParam.split(',') : [],
+          "projectColumns" : (this.variable.popupSubTitle === 'projection') ? funParam : [],
           "outputFileName" : "",
           "encodingColumns" : [],
           "x_columns" : [],
@@ -132,7 +147,7 @@ export class DataSourceService {
           "sortColumnNames" : [],
           "x_columns" : [],
           "y_columns" : "",
-          "encodingColumns" : funParam.split(','),
+          "encodingColumns" : funParam,
           "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
         }
       }
@@ -141,48 +156,45 @@ export class DataSourceService {
         this.variable.outputTable.data = resp;
         this.variable.outputTable.header = Object.keys(resp[0]);
       });
-    } else if (this.variable.popupSubTitle === 'decision tree' || this.variable.popupSubTitle === 'correlation') {
-      let param = {};
-      if (this.variable.popupSubTitle === 'decision tree') {
-        param = {
-          "ActionName" :  "Decision Tree" ,
-          "fileList": [],
-          "mergeColumn" : "",
-          "projectColumns" : [],
-          "outputFileName" : "",
-          "encodingColumns" : [],
-          "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
-        };
-      } else {
-        param = {
-          "ActionName" : "Correlation",
-          "fileList": [],
-          "mergeColumn" : "",
-          "projectColumns" : [],
-          "outputFileName" : "C:/Users/onkar/Desktop/graph/output2.png",
-          "sortColumnNames" : [],
-          "encodingColumns" : [],
-          "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
-        }
-      }
-  
+    } else if (this.variable.popupSubTitle === 'decision tree') {
+      const param = {
+        "ActionName" :  "Decision Tree" ,
+        "fileList": [],
+        "mergeColumn" : "",
+        "projectColumns" : [],
+        "outputFileName" : "",
+        "encodingColumns" : [],
+        "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
+      };
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
-        if(this.variable.popupSubTitle === 'correlation'){
-          if(typeof resp === 'string') {
-            //@ts-ignore
-            this.variable.encodeString = 'data:image/jpeg;base64,' + JSON.parse(resp).encodedString.substring(2, resp.encodedString.length - 1);
-          } else {
-            //@ts-ignore
-            this.variable.encodeString = 'data:image/jpeg;base64,' + resp.encodedString.substring(2, resp.encodedString.length - 1);
-          }
+        this.variable.accuracy = resp['accuracy'];
+      });
+    } else if (this.variable.popupSubTitle === 'correlation') {
+      const param = {
+        "ActionName" : "Correlation",
+        "fileList": [],
+        "mergeColumn" : "",
+        "projectColumns" : [],
+        "outputFileName" : "C:/Users/onkar/Desktop/graph/output2.png",
+        "sortColumnNames" : [],
+        "encodingColumns" : [],
+        "jsonData" : this.variable.outputTable.data.length ? JSON.stringify(this.variable.outputTable.data) : JSON.stringify([])
+      }
+      this.crud.handleMergeAction('/action/', param).subscribe(resp => {
+        console.log(resp);
+        if(typeof resp === 'string') {
+          //@ts-ignore
+          this.variable.encodeString = 'data:image/jpeg;base64,' + JSON.parse(resp).encodedString.substring(2, resp.encodedString.length - 1);
+        } else {
+          //@ts-ignore
+          this.variable.encodeString = 'data:image/jpeg;base64,' + resp.encodedString.substring(2, resp.encodedString.length - 1);
         }
         if (this.variable.popupSubTitle !== 'decision tree'){
           // @ts-ignore
           this.variable.outputTable.data = typeof resp.jsonData === 'string' ? JSON.parse(resp.jsonData) : resp.jsonData;
           this.variable.outputTable.header = Object.keys(this.variable.outputTable.data[0]);
         }
-        
       });
     }
     this.variable.actionCommonColumns = [];

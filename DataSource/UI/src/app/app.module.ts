@@ -17,10 +17,11 @@ import { OutputPopupComponent } from './component/output-popup/output-popup.comp
 import { FileInfoComponent } from './component/file-info/file-info.component';
 import { FileHeadComponent } from './component/file-head/file-head.component';
 import { FileDataComponent } from './component/file-data/file-data.component';
+import { DetailComponent } from './component/detail/detail.component';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, HttpClientModule],
-  declarations: [AppComponent, HelloComponent, TesteComponent, SidemenuComponent, InputPopupComponent, ActionPopupComponent, AnalysisPopupComponent, TransformationPopupComponent, OutputPopupComponent, FileInfoComponent, FileHeadComponent, FileDataComponent],
+  declarations: [AppComponent, HelloComponent, TesteComponent, SidemenuComponent, InputPopupComponent, ActionPopupComponent, AnalysisPopupComponent, TransformationPopupComponent, OutputPopupComponent, FileInfoComponent, FileHeadComponent, FileDataComponent, DetailComponent],
   bootstrap: [AppComponent],
   entryComponents: [TesteComponent],
   providers: [
