@@ -107,16 +107,69 @@ def actionApi(request):
 
             result = dataFile.to_json(orient="records")
 
-            my_stringIObytes = io.BytesIO()
-            plt.savefig(my_stringIObytes, format='jpg')
-            my_stringIObytes.seek(0)
-            my_base64_jpgData = str(base64.b64encode(my_stringIObytes.read()))
+            stringIObytes = io.BytesIO()
+            plt.savefig(stringIObytes, format='jpg')
+            stringIObytes.seek(0)
+            correlation_matrix_image = str(base64.b64encode(stringIObytes.read()))
 
             #response['jsonData'] = result
             #response['encodedString'] = my_base64_jpgData
+
+            sol = round((pearsoncorr.where(np.triu(np.ones(pearsoncorr.shape), k=1).astype(bool))
+                  .stack()
+                  .sort_values(ascending=True)),2)
+            data = {}
+            i=0
+            beg = 0
+            end = 0
+            for index, value in sol.items():
+                if(i==0):
+                    data[index] = value
+                    beg = value
+                if(i == len(sol)-1):
+                    data[index] = value
+                    end = value
+                i+=1
+
+            mid = (beg+end)/2
+            for index, value in sol.items():
+                if(value >= mid):
+                    data[index] = value
+                    break
+            
+            x = data.keys()
+            j=0
+            for i in x:
+                plt.figure()
+                if (j == 0):
+                    sb.regplot(x=dataFile[i[0]], y=dataFile[i[1]])
+                    stringIObytes = io.BytesIO()
+                    plt.title("Low Correlation")
+                    plt.savefig(stringIObytes, format='jpg')
+                    stringIObytes.seek(0)
+                    lowCorrelationEncodedString = str(base64.b64encode(stringIObytes.read()))
+                if (j == 1):
+                    sb.regplot(x=dataFile[i[0]], y=dataFile[i[1]])
+                    stringIObytes = io.BytesIO()
+                    plt.title("High Correlation")
+                    plt.savefig(stringIObytes, format='jpg')
+                    stringIObytes.seek(0)
+                    highCorrelationEncodedString = str(base64.b64encode(stringIObytes.read()))
+                if (j == 2):
+                    sb.regplot(x=dataFile[i[0]], y=dataFile[i[1]])
+                    stringIObytes = io.BytesIO()
+                    plt.title("Medium Correlation")
+                    plt.savefig(stringIObytes, format='jpg')
+                    stringIObytes.seek(0)
+                    mediumCorrelationEncodedString = str(base64.b64encode(stringIObytes.read()))
+                j+=1
+
             response = {
                 "jsonData" : result,
-                "encodedString" : my_base64_jpgData
+                "Correlation_matrix_encodedString" : correlation_matrix_image,
+                "Low_Correaltion_graph_encodedString" : lowCorrelationEncodedString,
+                "Medium_Correaltion_graph_encodedString" : highCorrelationEncodedString,
+                "High_Correaltion_graph_encodedString" : mediumCorrelationEncodedString
             }
             message = response
 
