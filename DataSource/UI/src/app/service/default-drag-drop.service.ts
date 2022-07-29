@@ -360,21 +360,35 @@ export class DefaultDragDropService {
       }
       // Action Popup Event Trigger
       else if (['merge','sort','projection'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
-        this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
-        if (!this.variable.listOfDraggedFiles.action) {
-          this.variable.listOfDraggedFiles.action = [];
+        if (this.variable.stateWiseData[dataInnerHTML.toLowerCase().trim()].length) {
+          this.variable.popupSubTitle = 'detail';
+          this.variable.selectedRecordForDetail = this.variable.stateWiseData[dataInnerHTML.toLowerCase().trim()];
+          this.dataSourceService.showData(this.variable.selectedRecordForDetail);
+          this.dataSourceService.openPopup('Details of : ' + dataInnerHTML.toLowerCase().trim(), 'detail');
+        } else {
+          this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
+          if (!this.variable.listOfDraggedFiles.action) {
+            this.variable.listOfDraggedFiles.action = [];
+          }
+          if(typeof this.variable.listOfDraggedFiles.action === 'string'){
+            this.variable.listOfDraggedFiles.action = [ this.variable.listOfDraggedFiles.action];
+          }
+          this.variable.listOfDraggedFiles.action.push(dataInnerHTML.toLowerCase().trim());
+          this.dataSourceService.openPopup(dataInnerHTML.toLowerCase().trim()+' Action','action');
+          this.variable.actionCommonColumns = this.variable.listOfDraggedFiles.actionCommonColumns;
         }
-        if(typeof this.variable.listOfDraggedFiles.action === 'string'){
-          this.variable.listOfDraggedFiles.action = [ this.variable.listOfDraggedFiles.action];
-        }
-        this.variable.listOfDraggedFiles.action.push(dataInnerHTML.toLowerCase().trim());
-        this.dataSourceService.openPopup(dataInnerHTML.toLowerCase().trim()+' Action','action');
-        this.variable.actionCommonColumns = this.variable.listOfDraggedFiles.actionCommonColumns;
       }
       // Transformation Popup Event Trigger
       else if (['uppercase','lowercase','encode'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
-        this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
-        this.dataSourceService.openPopup('Transformation: ' + this.variable.popupSubTitle, 'transformation');
+        if (this.variable.stateWiseData[dataInnerHTML.toLowerCase().trim()].length) {
+          this.variable.popupSubTitle = 'detail';
+          this.variable.selectedRecordForDetail = this.variable.stateWiseData[dataInnerHTML.toLowerCase().trim()];
+          this.dataSourceService.showData(this.variable.selectedRecordForDetail);
+          this.dataSourceService.openPopup('Details of : ' + dataInnerHTML.toLowerCase().trim(), 'detail');
+        } else {
+          this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
+          this.dataSourceService.openPopup('Transformation: ' + this.variable.popupSubTitle, 'transformation');
+        }
       }
       // Analysis Popup Event Trigger
       else if (['decision tree','regression','correlation'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
@@ -382,18 +396,23 @@ export class DefaultDragDropService {
         this.dataSourceService.saveAction();
         // this.dataSourceService.openPopup('Analysis: ' + this.variable.popupSubTitle, 'analysis');
       }
-      else if(dataInnerHTML.toLowerCase().trim().includes("csv") || dataInnerHTML.toLowerCase().trim().includes("xlsx")) {
-        this.variable.selectedRecordForDetail = [];
+      else if((dataInnerHTML.toLowerCase().trim().includes("csv") || dataInnerHTML.toLowerCase().trim().includes("xlsx")) && !dataInnerHTML.toLowerCase().trim().includes("common fields")) {
         const iteratedTable = this.variable.uploadedDataList.filter(data => data.fileDetail.filename.toLowerCase().trim() === dataInnerHTML.toLowerCase().trim())[0];
         if (iteratedTable) {
           this.variable.popupSubTitle = 'detailData';
-          this.variable.selectedRecordForDetail = iteratedTable;
+          this.variable.selectedRecordForDetail = iteratedTable.data;
         } else {
           this.variable.popupSubTitle = 'detail';
-          this.variable.selectedRecordForDetail = this.variable.outputTable;
+          this.variable.selectedRecordForDetail = this.variable.outputTable.data;
         }
         this.dataSourceService.showData(this.variable.selectedRecordForDetail);
-        this.dataSourceService.openPopup('Details of : ' + dataInnerHTML.toLowerCase().trim(), 'detail');
+        this.dataSourceService.openPopup('Details of : ' + dataInnerHTML.toLowerCase().trim().replaceAll('<br>', ''), 'detail');
+      } else if(dataInnerHTML.toLowerCase().trim().includes("common fields")) {
+        this.variable.selectedRecordForDetail = [];
+        this.variable.popupSubTitle = 'detail';
+        this.variable.selectedRecordForDetail = this.variable.stateWiseData.merge;
+        this.dataSourceService.showData(this.variable.selectedRecordForDetail);
+        this.dataSourceService.openPopup('Details of : ' + dataInnerHTML.toLowerCase().trim().replaceAll('<br>', ''), 'detail');
       }
     });
 

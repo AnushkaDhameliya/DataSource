@@ -62,7 +62,11 @@ export class DataSourceService {
       this.variable.popupTitle = 'Details ';
     } else {
       this.variable.selectedData = resp;
-      this.variable.popupTitle = 'Data ' + resp.fileDetail.filename;
+      try {
+        this.variable.popupTitle = 'Data ' + resp.fileDetail ? resp.fileDetail.filename : '';
+      } catch (e) {
+        this.variable.popupTitle = 'Data in detail';
+      }
     }
     this.variable.popupAction = 'file-data';
   }

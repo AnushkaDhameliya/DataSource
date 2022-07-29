@@ -16,4 +16,8 @@ export class DetailComponent implements OnInit {
     
   }
 
+  public getDataHeader(data) {
+    return Object.keys(data);
+  }
+
 }
