@@ -118,6 +118,8 @@ export class DataSourceService {
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
         this.variable.outputTable.data = resp;
+        // @ts-ignore
+        this.variable.stateWiseData.merge = resp;
         this.variable.outputTable.header = Object.keys(resp[0]);
       });
       document.querySelector("#node-" + this.variable.selectedNode + " .title-box .iconInfo").innerHTML = 'Merge <br/>Common Fields: ' + this.getActionSummary();
@@ -154,6 +156,8 @@ export class DataSourceService {
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
         this.variable.outputTable.data = resp;
+        // @ts-ignore
+        this.variable.stateWiseData[this.variable.popupSubTitle] = resp;
         this.variable.outputTable.header = Object.keys(resp[0]);
       });
     } else if (this.variable.popupSubTitle === 'decision tree') {
@@ -183,12 +187,19 @@ export class DataSourceService {
       }
       this.crud.handleMergeAction('/action/', param).subscribe(resp => {
         console.log(resp);
+        // @ts-ignore
+        this.variable.stateWiseData[this.variable.popupSubTitle] = resp;
         if(typeof resp === 'string') {
           //@ts-ignore
-          this.variable.encodeString = 'data:image/jpeg;base64,' + JSON.parse(resp).encodedString.substring(2, resp.encodedString.length - 1);
+          this.variable.Correlation_matrix_encodedString = 'data:image/jpeg;base64,' + JSON.parse(resp).Correlation_matrix_encodedString.substring(2, resp['Correlation_matrix_encodedString'].length - 1);
+          this.variable.High_Correaltion_graph_encodedString = 'data:image/jpeg;base64,' + JSON.parse(resp).High_Correaltion_graph_encodedString.substring(2, resp['High_Correaltion_graph_encodedString'].length - 1);
+          this.variable.Low_Correaltion_graph_encodedString = 'data:image/jpeg;base64,' + JSON.parse(resp).Low_Correaltion_graph_encodedString.substring(2, resp['Low_Correaltion_graph_encodedString'].length - 1);
+          this.variable.Medium_Correaltion_graph_encodedString = 'data:image/jpeg;base64,' + JSON.parse(resp).Medium_Correaltion_graph_encodedString.substring(2, resp['Medium_Correaltion_graph_encodedString'].length - 1);
         } else {
-          //@ts-ignore
-          this.variable.encodeString = 'data:image/jpeg;base64,' + resp.encodedString.substring(2, resp.encodedString.length - 1);
+          this.variable.Correlation_matrix_encodedString = 'data:image/jpeg;base64,' + resp['Correlation_matrix_encodedString'].substring(2, resp['Correlation_matrix_encodedString'].length - 1);
+          this.variable.High_Correaltion_graph_encodedString = 'data:image/jpeg;base64,' + resp['High_Correaltion_graph_encodedString'].substring(2, resp['High_Correaltion_graph_encodedString'].length - 1);
+          this.variable.Low_Correaltion_graph_encodedString = 'data:image/jpeg;base64,' + resp['Low_Correaltion_graph_encodedString'].substring(2, resp['Low_Correaltion_graph_encodedString'].length - 1);
+          this.variable.Medium_Correaltion_graph_encodedString = 'data:image/jpeg;base64,' + resp['Medium_Correaltion_graph_encodedString'].substring(2, resp['Medium_Correaltion_graph_encodedString'].length - 1);
         }
         if (this.variable.popupSubTitle !== 'decision tree'){
           // @ts-ignore

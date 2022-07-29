@@ -20,8 +20,8 @@ export class OutputPopupComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getImgUrl() {
-    return this.sanitizer.bypassSecurityTrustUrl(this.variable.encodeString);
+  getImgUrl(param) {
+    return this.sanitizer.bypassSecurityTrustUrl(param);
   }
 
 }

@@ -22,14 +22,17 @@
   </div>
 </ng-container>
 <ng-container *ngIf="!viewData">
-  <ng-container *ngIf="variable.encodeString">
-    <div class="w100">
-      <img class="w100" [src]="getImgUrl()">
+  <ng-container *ngIf="variable.Correlation_matrix_encodedString">
+    <div class="w100 encodedImages">
+      <img  [src]="getImgUrl(variable.Correlation_matrix_encodedString)">
+      <img  [src]="getImgUrl(variable.High_Correaltion_graph_encodedString)">
+      <img  [src]="getImgUrl(variable.Low_Correaltion_graph_encodedString)">
+      <img  [src]="getImgUrl(variable.Medium_Correaltion_graph_encodedString)">
     </div>
   </ng-container>
   <ng-container *ngIf="variable.accuracy">
     <div class="w100">
-      Accuracy of Decision Tree: {{variable.accuracy}}
+      Accuracy of Decision Tree According to Salary: {{variable.accuracy}}
     </div>
   </ng-container>
 </ng-container>

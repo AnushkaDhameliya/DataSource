@@ -1,5 +1,5 @@
-<div class="mt1"><strong>Please Select Comma Seperated Headers and put it in Input Box below:</strong></div>
-<p>{{dataSource.getDataHeader(variable.outputTable.data.length ? variable.outputTable.data[0] : variable.listOfDraggedFiles.data[0].data[0])}}</p>
+<div class="mt1"><strong>Please Select Columns to Encode:</strong></div>
+<!--p>{{dataSource.getDataHeader(variable.outputTable.data.length ? variable.outputTable.data[0] : variable.listOfDraggedFiles.data[0].data[0])}}</p-->
 <table>
     <tr *ngFor="let info of dataSource.getDataHeader(variable.outputTable.data.length ? variable.outputTable.data[0] : variable.listOfDraggedFiles.data[0].data[0])">
         <td><input class="w100" type="checkbox" [value]="info" (change)="onCheckboxChange($event)" [title]="info"/></td>

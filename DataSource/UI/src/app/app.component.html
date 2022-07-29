@@ -20,7 +20,7 @@
 		</div>
 	</div>
 </div>
-<div class="popupWrapper" *ngIf="variable.popupFlag">
+<div class="popupWrapper" [class.active]="variable.popupAction === 'output'" *ngIf="variable.popupFlag">
   <div class="popupContainer">
     <table class="w100 noBorder m0">
       <tr>

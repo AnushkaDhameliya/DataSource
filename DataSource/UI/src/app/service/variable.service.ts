@@ -40,8 +40,23 @@ export class VariableService {
   };
   public accuracy = null;
   public encodeString = null;
+  public Correlation_matrix_encodedString = null;
+  public High_Correaltion_graph_encodedString = null;
+  public Low_Correaltion_graph_encodedString= null;
+  public Medium_Correaltion_graph_encodedString = null;
   public separatorList = [' ',',',';',"'",'"','!','@','~','#','$'];
   public selectedRecordForDetail = null;
+  public stateWiseData = {
+    'merge': [],
+    'sort': [],
+    'projection': [],
+    'decision_tree': [],
+    'regression':[],
+    'correlation':[],
+    'uppercase':[],
+    'lowercase':[],
+    'encode':[]
+  };
 
   constructor() {}
 

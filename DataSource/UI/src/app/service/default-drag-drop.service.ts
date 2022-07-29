@@ -379,7 +379,8 @@ export class DefaultDragDropService {
       // Analysis Popup Event Trigger
       else if (['decision tree','regression','correlation'].indexOf(dataInnerHTML.toLowerCase().trim()) !== -1) {
         this.variable.popupSubTitle = dataInnerHTML.toLowerCase().trim();
-        this.dataSourceService.openPopup('Analysis: ' + this.variable.popupSubTitle, 'analysis');
+        this.dataSourceService.saveAction();
+        // this.dataSourceService.openPopup('Analysis: ' + this.variable.popupSubTitle, 'analysis');
       }
       else if(dataInnerHTML.toLowerCase().trim().includes("csv") || dataInnerHTML.toLowerCase().trim().includes("xlsx")) {
         this.variable.selectedRecordForDetail = [];

@@ -875,3 +875,9 @@ textarea {
 .cursorPointer {
   cursor: pointer;
 }
+.encodedImages img {
+  max-height: 500px;
+}
+.popupWrapper.active .popupContainer {
+  max-height: 80%;
+}
