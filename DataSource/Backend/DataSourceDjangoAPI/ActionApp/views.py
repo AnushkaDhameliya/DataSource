@@ -144,21 +144,21 @@ def actionApi(request):
                 if (j == 0):
                     sb.regplot(x=dataFile[i[0]], y=dataFile[i[1]])
                     stringIObytes = io.BytesIO()
-                    plt.title("Low Correlation")
+                    plt.title("Negative Correlation")
                     plt.savefig(stringIObytes, format='jpg')
                     stringIObytes.seek(0)
                     lowCorrelationEncodedString = str(base64.b64encode(stringIObytes.read()))
                 if (j == 1):
                     sb.regplot(x=dataFile[i[0]], y=dataFile[i[1]])
                     stringIObytes = io.BytesIO()
-                    plt.title("High Correlation")
+                    plt.title("Positive Correlation")
                     plt.savefig(stringIObytes, format='jpg')
                     stringIObytes.seek(0)
                     highCorrelationEncodedString = str(base64.b64encode(stringIObytes.read()))
                 if (j == 2):
                     sb.regplot(x=dataFile[i[0]], y=dataFile[i[1]])
                     stringIObytes = io.BytesIO()
-                    plt.title("Medium Correlation")
+                    plt.title("Correlation?")
                     plt.savefig(stringIObytes, format='jpg')
                     stringIObytes.seek(0)
                     mediumCorrelationEncodedString = str(base64.b64encode(stringIObytes.read()))
@@ -201,6 +201,37 @@ def actionApi(request):
             acc = str(format_float) + "%"
             response = { "accuracy" : acc }
             message = response
+
+
+        if actionName == "UPPERCASE":
+            jsonData = data["jsonData"]
+            json_object = json.loads(jsonData)
+            dataFile = pd.json_normalize(json_object)
+            
+            dataFile_columns = dataFile.columns
+            dataFile_dtypes = dataFile.dtypes
+
+            for i in range(0,len(dataFile_columns)-1):
+                if(dataFile_dtypes[i] == 'object'):
+                    dataFile[dataFile_columns[i]] = dataFile[dataFile_columns[i]].str.upper()
+            
+            result = dataFile.to_json(orient="records")
+            message = json.loads(result)
+
+        if actionName == "lowercase":
+            jsonData = data["jsonData"]
+            json_object = json.loads(jsonData)
+            dataFile = pd.json_normalize(json_object)
+            
+            dataFile_columns = dataFile.columns
+            dataFile_dtypes = dataFile.dtypes
+
+            for i in range(0,len(dataFile_columns)-1):
+                if(dataFile_dtypes[i] == 'object'):
+                    dataFile[dataFile_columns[i]] = dataFile[dataFile_columns[i]].str.lower()
+            
+            result = dataFile.to_json(orient="records")
+            message = json.loads(result) 
 
     return JsonResponse(message,safe=False)
 
