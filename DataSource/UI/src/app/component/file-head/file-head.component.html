@@ -110,7 +110,7 @@
     <button class="mr1" (click)="actionEvent = 'speicalChar'">Special Character Separator</button>
     <button (click)="actionEvent = 'charRange'">Separate Character Range</button>
     <div *ngIf="actionEvent === 'charRange'">
-      <button class="mt1" (click)="variable.columnSeparatorArray.push({columnHeader: ''})">Add Row</button>
+      <button class="mt1" (click)="variable.columnSeparatorArray.push({columnHeader: ''})">Add Column</button>
       <table>
         <tr>
           <th>Column Header</th>
