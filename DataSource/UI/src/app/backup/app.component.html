@@ -204,7 +204,7 @@
             <ng-container *ngIf="headersQuestion.q2 === 'characterRange'">
               <br/><strong>Data: [FIRST LINE]</strong>
               <div>{{getFirstTextLine(selectedData.data)}}</div>
-              <button (click)="columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Row</button>
+              <button (click)="columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Column</button>
               <table>
                 <tr>
                   <th>Column Header</th>
@@ -229,7 +229,7 @@
               <p>Add Headers</p>
               <strong>Data: [FIRST LINE]</strong>
               <div>{{getFirstTextLine(selectedData.data)}}</div>
-              <button (click)="columnSeparatorArray.push({columnHeader: ''})">Add Row</button>
+              <button (click)="columnSeparatorArray.push({columnHeader: ''})">Add Column</button>
               <table>
                 <tr>
                   <th>Column Header</th>
@@ -329,7 +329,7 @@
           <ng-container *ngIf="!devideHeaders.length">
             <strong>Data: [FIRST LINE]</strong>
             <div>{{getFirstTextLine(selectedData.data)}}</div>
-            <button (click)="columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Row</button>
+            <button (click)="columnSeparatorArray.push({columnHeader: '', charRange: ''})">Add Column</button>
             <table>
               <tr>
                 <th>Column Header</th>
